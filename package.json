@@ -25,6 +25,8 @@
   },
   "homepage": "https://github.com/dsmalicsi/node-led-controller#readme",
   "dependencies": {
-    "reduce": "^1.0.1"
+    "express": "^4.14.0",
+    "lodash": "^4.13.1",
+    "socket.io": "^1.4.8"
   }
 }

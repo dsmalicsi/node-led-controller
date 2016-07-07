@@ -12,26 +12,83 @@ client.connect(5577, '192.168.1.18', function () {
 });
 
 client.on('connect', function () {
-    console.log("on connect")
+
 })
 
 client.on('data', function (data) {
-    console.log('Received: ' + data, data.length);
+    console.log('DATA: ' + data, data.length/2);
     var res = read(data, data.length)
     var res_len = data.length / 2
     switch (res_len) {
     case 0:
-        console.log("Turned Off Lights")
+        console.log("RX: Lights Off")
+        break;
+    case 1:
+        if (res[0] == 0x30) {
+            console.log("RX: Light State Changed, checking...")
+            setTimeout(checkState(client), 1000)
+        } else {
+            console.lg("RX: Unknown State Changed")
+        }
+        
         break;
     case 14: //Check State
-        console.log("Check State")
+        console.log("RX: Check State \n=================================")
+        
+		power_state = res[2]
+		power_str = "Unknown power state"
+
+		if (power_state == 0x23)
+        {
+            client.is_on = true
+            power_str = "ON"
+        }
+        else if (power_state == 0x24) {
+            client.is_on = false
+            power_str = "OFF"
+        }
+ 
+		pattern = res[3]
+		ww_level = res[9]
+		mode = checkMode(ww_level, pattern)
+		delay = res[5]
+//		speed = getSpeed(delay)
+//		
+        
+		if (mode == "color") {
+            red = res[6]
+			green = res[7]
+			blue = res[8]
+//			color_str
+			mode_str = "Color: {" + "R:" + red + " G:" + green + " B:" + blue+"}" 
+        }
+		else if (mode == "ww"){
+         mode_str = "Warm White: }%" //byteToPercent(ww_level))
+        }
+		else if (mode == "preset"){
+			//pat = getPatternName(pattern)
+			mode_str = "Pattern: name (Speed %)"
+        }
+		else if (mode == "custom"){
+			mode_str = "Custom pattern (Speed %)"
+        }
+		else {
+			mode_str = "Unknown mode 0x"///
+        }
+            
+		if (pattern == 0x62){
+			mode_str += " (tmp)"
+		    client.state_str = power_str + " ["+mode_str+"]"
+        }
+            
+        console.log("POWER:", power_str, "PTRN:", pattern, "WW:", ww_level, "\nMODE:", mode_str, "\nDELAY:", delay, "\n=================================")
         break;
     default:
         console.log(res)
-        console.log("Unknown response")
+        console.log("Unknown response", res_len)
         break;
     }
-    client.destroy(); // kill client after server's response
+//    client.destroy(); // kill client after server's response
 });
 
 client.on('close', function () {
@@ -68,4 +125,32 @@ function sum(arr) {
         result += Number(arr[n]);
     }
     return result;
+}
+
+function checkMode(ww_level, pattern) {
+    mode = "unknown"
+    if (pattern == 0x61 || pattern == 0x62) {
+        if (ww_level != 0)
+            mode = "ww"
+        else
+            mode = "color"
+    }   
+    else if (pattern == 0x60)
+        mode = "custom"
+    else if (validPresetPattern(pattern))
+        mode = "preset"
+        
+    return mode
+}
+
+function validPresetPattern(pattern){
+    
+		if (pattern < 0x25 || pattern > 0x38)
+            return false
+        else
+		    return true
+}
+
+function getPatternName(pattern) {
+
 }

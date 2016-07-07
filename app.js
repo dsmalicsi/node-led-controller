@@ -66,8 +66,8 @@ client.on('data', function (data) {
          mode_str = "Warm White: %" //byteToPercent(ww_level))
         }
 		else if (mode == "preset"){
-			pat = patterns.getPatternName(pattern)
-			mode_str = "Pattern: name (Speed "+speed+"%)"
+			pattern_str = patterns.getPatternName(pattern)
+			mode_str = pattern_str + " (Speed "+speed+"%)"
         }
 		else if (mode == "custom"){
 			mode_str = "Custom pattern (Speed "+speed+"%)"

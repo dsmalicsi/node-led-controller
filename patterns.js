@@ -33,6 +33,6 @@ exports.validPresetPattern = function (pattern) {
 
 exports.getPatternName = function (pattern) {
 
-    console.log(patternNames[pattern].replace(/_/g, " ").toLowerCase().replace(/\b\w/g, function (txt) { return txt.toUpperCase(); }))
+    return patternNames[pattern].replace(/_/g, " ").toLowerCase().replace(/\b\w/g, function (txt) { return txt.toUpperCase(); })
 
 }

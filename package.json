@@ -1,0 +1,30 @@
+{
+  "name": "node-led-controller",
+  "version": "1.0.0",
+  "description": "A Node.JS client for controlling and programming LED Lights connected to a NodeMCU WiFi chipset server.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dsmalicsi/node-led-controller.git"
+  },
+  "keywords": [
+    "node",
+    "nodejs",
+    "led",
+    "rgb",
+    "lights",
+    "controller"
+  ],
+  "author": "Daryll Malicsi @dsmalicsi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/dsmalicsi/node-led-controller/issues"
+  },
+  "homepage": "https://github.com/dsmalicsi/node-led-controller#readme",
+  "dependencies": {
+    "reduce": "^1.0.1"
+  }
+}

@@ -1,7 +1,9 @@
 var net = require('net');
 var client = new net.Socket();
+var utils = require('./utils');
+var patterns = require('./patterns');
 
-client.setEncoding("hex")
+client.setEncoding("hex");
 
     //hardcode IP for now
 client.connect(5577, '192.168.1.18', function () {
@@ -48,9 +50,9 @@ client.on('data', function (data) {
  
 		pattern = res[3]
 		ww_level = res[9]
-		mode = checkMode(ww_level, pattern)
+		mode = utils.checkMode(ww_level, pattern)
 		delay = res[5]
-//		speed = getSpeed(delay)
+		speed = utils.calcSpeed(delay)
 //		
         
 		if (mode == "color") {
@@ -61,14 +63,14 @@ client.on('data', function (data) {
 			mode_str = "Color: {" + "R:" + red + " G:" + green + " B:" + blue+"}" 
         }
 		else if (mode == "ww"){
-         mode_str = "Warm White: }%" //byteToPercent(ww_level))
+         mode_str = "Warm White: %" //byteToPercent(ww_level))
         }
 		else if (mode == "preset"){
-			//pat = getPatternName(pattern)
-			mode_str = "Pattern: name (Speed %)"
+			pat = patterns.getPatternName(pattern)
+			mode_str = "Pattern: name (Speed "+speed+"%)"
         }
 		else if (mode == "custom"){
-			mode_str = "Custom pattern (Speed %)"
+			mode_str = "Custom pattern (Speed "+speed+"%)"
         }
 		else {
 			mode_str = "Unknown mode 0x"///
@@ -79,7 +81,7 @@ client.on('data', function (data) {
 		    client.state_str = power_str + " ["+mode_str+"]"
         }
             
-        console.log("POWER:", power_str, "PTRN:", pattern, "WW:", ww_level, "\nMODE:", mode_str, "\nDELAY:", delay, "\n=================================")
+        console.log("POWER:", power_str, "PTRN:", pattern.toString(16), "WW:", ww_level, "\nMODE:", mode_str, "\nDELAY:", delay, "\n=================================")
         break;
     default:
         console.log(res)
@@ -125,30 +127,3 @@ function sum(arr) {
     return result;
 }
 
-function checkMode(ww_level, pattern) {
-    mode = "unknown"
-    if (pattern == 0x61 || pattern == 0x62) {
-        if (ww_level != 0)
-            mode = "ww"
-        else
-            mode = "color"
-    }   
-    else if (pattern == 0x60)
-        mode = "custom"
-    else if (validPresetPattern(pattern))
-        mode = "preset"
-        
-    return mode
-}
-
-function validPresetPattern(pattern){
-    
-		if (pattern < 0x25 || pattern > 0x38)
-            return false
-        else
-		    return true
-}
-
-function getPatternName(pattern) {
-
-}

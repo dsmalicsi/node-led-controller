@@ -1,6 +1,4 @@
 var net = require('net');
-var stream = require('stream');
-var reduce = require('reduce');
 var client = new net.Socket();
 
 client.setEncoding("hex")

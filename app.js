@@ -2,6 +2,8 @@ var net = require('net');
 var client = new net.Socket();
 var utils = require('./utils');
 var patterns = require('./patterns');
+var express = require('express');
+var http = express();
 
 require( "console-stamp" )( console, {
     pattern: 'HH:mm:ss',
@@ -12,10 +14,37 @@ require( "console-stamp" )( console, {
 	}
 } );
 
+
+console.log("Initialize...")
+
+//
+//
+//http.get('/', function (req, res) {
+//  res.send('Hello World!');
+//});
+
+
+http.use(express.static('public'));
+
+
+// POST method route
+http.post('/commands/', function (req, res) {
+    command = req.body.command
+    value = req.body.value
+    
+  res.json('POST request to the homepage');
+});
+
+http.listen(3000, function () {
+  console.log('Web Server listening on port 3000');
+});
+
+
 client.setEncoding("hex");
 client.setKeepAlive(true, 30000);
 
-console.log("Initialize...")
+
+
     //hardcode IP for now
 var ip = '192.168.1.50'
 
@@ -28,7 +57,9 @@ client.connect(5577, ip, function () {
 
 client.on('connect', function () {
     console.log('Connected to '+this.ip+'!');
-    checkState(client)
+    checkState(client, function(data){
+        console.log(data)
+    })
 
 })
 
@@ -120,27 +151,38 @@ client.on('close', function () {
     console.log('Connection closed');
 });
 
-function checkState(client) {
+function checkState(client, callback) {
     var msg = [0x81, 0x8a, 0x8b];
-    send(client, msg)
+    send(client, msg, function(data){
+        
+        callback = null;
+        
+    })
 }
 
-function turnOn(client) {
+function turnOn(client, callback) {
 
     var msg = [0x71, 0x23, 0x0F]
     if(client.is_on == true) {
         console.log("already turned on!")
     } else {
-        send(client, msg)
+        send(client, msg, function(data){
+            
+            callback = null;
+        })
     }
 }
 
-function turnOff(client) {
+function turnOff(client, callback) {
     var msg = [0x71, 0x24, 0x0F]
     if(client.is_on == false) {
         console.log("already turned off!")
     } else {
-        send(client, msg)
+        send(client, msg, function(data){
+            
+            callback = null
+            
+        })
     }
 }
 
@@ -155,11 +197,24 @@ function read(response, pkt_length) {
     return rx
 }
 
-function send(client, msg) {
+function send(client, msg, callback) {
     var crc = sum(msg)
     msg.push(crc)
     console.log("TX:",msg,"0x"+crc.toString(16).replace(/^[0-9]/g,''))
-    client.write(new Buffer(msg))
+    client.write(new Buffer(msg), function(err, data){
+        
+        if(!err) {
+            callback = {
+                success: true,
+                message: "Command Sent!"
+            }
+        } else {
+            callback = {
+                success: false,
+                message: "Command Failed!"
+            }
+        }
+    })
 }
 
 function sum(arr) {

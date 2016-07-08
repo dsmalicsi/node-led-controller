@@ -28,6 +28,20 @@
     <link href="css/snackbar.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+    <style>
+        .snackbar.success {
+            background-color: #5cb85c;
+        }
+        
+        .snackbar.error {
+            background-color: #f55549;
+        }
+        
+        .snackbar.info {
+            background-color: #0fb2fc;
+        }
+    </style>
+
 </head>
 
 <body class="inverse">
@@ -45,7 +59,7 @@
 
 
     </div>
-    <span class="btn btn-material-deeppurple" onclick="javascript:$.snackbar({content: 'This is a JS generated snackbar, it rocks!'});">Create and show a snackbar.</span>
+    <span class="btn btn-material-deeppurple" onclick="javascript:$.snackbar({content: '<b>ERROR</b>',class:'error'});">Create and show a snackbar.</span>
 
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -107,9 +121,9 @@
 
     <script>
         var snackBarOptions = {
-            content: "default message", 
-            timeout: 5000, 
-            htmlAllowed: true, 
+            content: "default message",
+            timeout: 5000,
+            htmlAllowed: true,
             onClose: function () {} // callback
         }
     </script>

@@ -9,26 +9,26 @@ It is possible that this application can be expanded and may serve as an API for
 ----------
 **Functions:**
 
- - Turn on/off power
- - Brightness control (dimmer)
- - Retrieve status of the device
- - Change Color (for RGB LEDs, using hex rgb codes) - *work in progress*
- - Change Mode   - *work in progress*
+- Turn on/off power
+- Brightness control (dimmer)
+- Retrieve status of the device
+- Change Color (for RGB LEDs, using hex rgb codes) - *work in progress*
+- Change Mode   - *work in progress*
  
- ----------
- **TODO**
+----------
+**TODO**
 
 - Add function for scanning devices
- 
- ----------
- **Future Plans**
- *I can't tell if I will stay committed on this project, but here are some possibilities that I can think of...*
- 
- - Create RESTful API for all functions
- - Add support for other devices that are already available in the market by reverse-engineering
- - 
 
- ----------
- **Notes**
- This app was built on **node v4.4.7**. It should work fine on newer versions.
- Installation of node modules are required, please see **package.json** for dependencies.
+----------
+**Future Plans**
+*I can't tell if I will stay committed on this project, but here are some possibilities that I can think of...*
+
+- Create RESTful API for all functions
+- Add support for other devices that are already available in the market by reverse-engineering
+
+
+----------
+**Notes**
+This app was built on **node v4.4.7**. It should work fine on newer versions.
+Installation of node modules are required, please see **package.json** for dependencies.

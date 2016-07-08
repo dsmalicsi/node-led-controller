@@ -38,4 +38,29 @@ Internet-of-Things is awesome!
 **Notes**
 
 This app was built on **node v4.4.7**. It should work fine on newer versions.
+
 Installation of node modules are required, please see **package.json** for dependencies.
+
+----------
+**License**
+
+[GNU General Public License v3.0](https://github.com/dsmalicsi/node-led-controller/blob/master/LICENSE.md)
+
+
+    Node-led-controller, A Node.js application for controlling and programming LED Lights connected to a NodeMCU WiFi chipset.
+    Copyright (C) 2016  Daryll Malicsi
+
+    Node-led-controller is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    
+For redistribution/modifications, you need to include a copyright notice, together with a copy of the license, within the code. You must also make the source code available when you release the software. For more information, please read http://www.gnu.org/licenses/quick-guide-gplv3.html

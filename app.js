@@ -1,3 +1,7 @@
+/* Copyright (C) 2016 Daryll Malicsi,
+   LICENSE at https://github.com/dsmalicsi/node-led-controller/blob/master/LICENSE.md
+*/
+
 var net = require('net');
 var client = new net.Socket();
 var utils = require('./utils');
@@ -7,14 +11,14 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-require( "console-stamp" )( console, {
+require("console-stamp")(console, {
     pattern: 'HH:mm:ss',
-	colors: {
-    	stamp: "yellow",
-    	label: "white",
-    	metadata: "green"
-	}
-} );
+    colors: {
+        stamp: "yellow",
+        label: "white",
+        metadata: "green"
+    }
+});
 
 
 //==== FRONT END
@@ -26,19 +30,19 @@ app.use(express.static('public'));
 app.post('/commands/', function (req, res) {
     command = req.body.command
     value = req.body.value
-    
+
     res.json('POST request to the homepage');
 });
 
 //==== SOCKET.IO EVENTS
 
-io.on('connection', function(socket){
-  console.log('User connected');
+io.on('connection', function (socket) {
+    console.log('User connected');
 });
 
 
 http.listen(3000, function () {
-  console.log('Web Server listening on port 3000');
+    console.log('Web Server listening on port 3000');
 });
 
 
@@ -50,29 +54,29 @@ http.listen(3000, function () {
 
 client.setEncoding("hex");
 client.setKeepAlive(true, 30000);
-    //hardcode IP for now
+//hardcode IP for now
 var ip = '192.168.1.50'
 
 client.connect(5577, ip, function () {
     this.ip = ip
     this.is_on = false
-    console.log('Connecting to device ('+this.ip+')...');
-    
+    console.log('Connecting to device (' + this.ip + ')...');
+
 });
 
 client.on('connect', function () {
-    console.log('Connected to '+this.ip+'!');
-    checkState(client, function(data){
+    console.log('Connected to ' + this.ip + '!');
+    checkState(client, function (data) {
         console.log(data)
     })
 
 })
 
 client.on('data', function (data) {
-    console.log('RX:',data.replace(/(.{1,2})/g,'$1 '),"["+data.length/2+"]");
+    console.log('RX:', data.replace(/(.{1,2})/g, '$1 '), "[" + data.length / 2 + "]");
     var res = read(data, data.length)
-    var res_len = data.length/2
-    
+    var res_len = data.length / 2
+
     //Translate Operations
     switch (res_len) {
     case 0:
@@ -85,55 +89,49 @@ client.on('data', function (data) {
         } else {
             console.lg("RX: Unknown State Changed")
         }
-        
+
         break;
     case 14: //Check State
         console.log("OP: Check State")
-        
-		power_state = res[2]
-		power_str = "Unknown power state"
 
-		if (power_state == 0x23)
-        {
+        power_state = res[2]
+        power_str = "Unknown power state"
+
+        if (power_state == 0x23) {
             this.is_on = true
             power_str = "ON"
-        }
-        else if (power_state == 0x24) {
+        } else if (power_state == 0x24) {
             this.is_on = false
             power_str = "OFF"
         }
- 
-		pattern = res[3]
-		ww_level = res[9]
-		mode = utils.checkMode(ww_level, pattern)
-		delay = res[5]
-		speed = utils.calcSpeed(delay)
-//		
-        
-		if (mode == "color") {
+
+        pattern = res[3]
+        ww_level = res[9]
+        mode = utils.checkMode(ww_level, pattern)
+        delay = res[5]
+        speed = utils.calcSpeed(delay)
+            //		
+
+        if (mode == "color") {
             red = res[6]
-			green = res[7]
-			blue = res[8]
-//			color_str
-			mode_str = "Color: {" + "R:" + red + " G:" + green + " B:" + blue+"}" 
+            green = res[7]
+            blue = res[8]
+                //			color_str
+            mode_str = "Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
+        } else if (mode == "ww") {
+            mode_str = "Warm White: %" //byteToPercent(ww_level))
+        } else if (mode == "preset") {
+            pattern_str = patterns.getPatternName(pattern)
+            mode_str = pattern_str + " (Speed " + speed + "%)"
+        } else if (mode == "custom") {
+            mode_str = "Custom pattern (Speed " + speed + "%)"
+        } else {
+            mode_str = "Unknown mode 0x" ///
         }
-		else if (mode == "ww"){
-         mode_str = "Warm White: %" //byteToPercent(ww_level))
-        }
-		else if (mode == "preset"){
-			pattern_str = patterns.getPatternName(pattern)
-			mode_str = pattern_str + " (Speed "+speed+"%)"
-        }
-		else if (mode == "custom"){
-			mode_str = "Custom pattern (Speed "+speed+"%)"
-        }
-		else {
-			mode_str = "Unknown mode 0x"///
-        }
-            
-		if (pattern == 0x62){
-			mode_str += " (tmp)"
-		    client.state_str = power_str + " ["+mode_str+"]"
+
+        if (pattern == 0x62) {
+            mode_str += " (tmp)"
+            client.state_str = power_str + " [" + mode_str + "]"
         }
         console.log("=================================")
         console.log("POWER:", power_str, "PTRN:", pattern.toString(16), "WW:", ww_level)
@@ -146,7 +144,7 @@ client.on('data', function (data) {
         console.log("Unknown response", res_len)
         break;
     }
-//    client.destroy(); // kill client after server's response
+    //    client.destroy(); // kill client after server's response
 });
 
 client.on('error', function (err) {
@@ -158,21 +156,21 @@ client.on('close', function () {
 
 function checkState(client, callback) {
     var msg = [0x81, 0x8a, 0x8b];
-    send(client, msg, function(data){
-        
+    send(client, msg, function (data) {
+
         callback = null;
-        
+
     })
 }
 
 function turnOn(client, callback) {
 
     var msg = [0x71, 0x23, 0x0F]
-    if(client.is_on == true) {
+    if (client.is_on == true) {
         console.log("already turned on!")
     } else {
-        send(client, msg, function(data){
-            
+        send(client, msg, function (data) {
+
             callback = null;
         })
     }
@@ -180,13 +178,13 @@ function turnOn(client, callback) {
 
 function turnOff(client, callback) {
     var msg = [0x71, 0x24, 0x0F]
-    if(client.is_on == false) {
+    if (client.is_on == false) {
         console.log("already turned off!")
     } else {
-        send(client, msg, function(data){
-            
+        send(client, msg, function (data) {
+
             callback = null
-            
+
         })
     }
 }
@@ -205,10 +203,10 @@ function read(response, pkt_length) {
 function send(client, msg, callback) {
     var crc = sum(msg)
     msg.push(crc)
-    console.log("TX:",msg,"0x"+crc.toString(16).replace(/^[0-9]/g,''))
-    client.write(new Buffer(msg), function(err, data){
-        
-        if(!err) {
+    console.log("TX:", msg, "0x" + crc.toString(16).replace(/^[0-9]/g, ''))
+    client.write(new Buffer(msg), function (err, data) {
+
+        if (!err) {
             callback = {
                 success: true,
                 message: "Command Sent!"
@@ -223,11 +221,10 @@ function send(client, msg, callback) {
 }
 
 function sum(arr) {
-    var result = 0
-        , n = arr.length || 0;
+    var result = 0,
+        n = arr.length || 0;
     while (n--) {
         result += Number(arr[n]);
     }
     return result;
 }
-

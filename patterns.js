@@ -1,3 +1,7 @@
+/* Copyright (C) 2016 Daryll Malicsi,
+   LICENSE at https://github.com/dsmalicsi/node-led-controller/blob/master/LICENSE.md
+*/
+
 var _ = require("lodash");
 
 var patternNames = {

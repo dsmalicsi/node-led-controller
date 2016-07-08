@@ -19,7 +19,7 @@ exports.checkMode = (ww_level, pattern) => {
     else if (patterns.validPresetPattern(pattern))
         mode = "preset"
         
-    mode
+    return mode
 }
 
 exports.calcSpeed = (delay) => {
@@ -33,6 +33,6 @@ exports.calcSpeed = (delay) => {
     inv_speed = parseInt((delay * 100)/(max_delay)-1)
     speed = 100 - inv_speed
     
-    speed
+    return speed
 }
  

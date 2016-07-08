@@ -20,7 +20,7 @@ console.log("Initializing...");
 
 // web logger
 morgan.format('logdate', () => dateFormat(new Date(), "mm/dd/yy h:MM:ss"));
-app.use(morgan('[:logdate] short'));
+app.use(morgan('[:logdate]  :remote-addr :remote-user :method :url HTTP/:http-version :status - :res[content-length] - :response-time ms'));
 
 // Express should use public folder for serving 
 // the front-end files
@@ -53,8 +53,6 @@ io.on('connection', (socket) => {
 
 
 //== CLIENT FOR CONNECTING TO DEVICES
-
-
 client.setEncoding("hex");
 client.setKeepAlive(true, 30000);
 //hardcode IP for now

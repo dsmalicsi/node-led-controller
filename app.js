@@ -7,19 +7,26 @@ var client = new net.Socket();
 var utils = require('./utils');
 var patterns = require('./patterns');
 var express = require('express');
+var morgan = require('morgan')
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
-
 var dateFormat = require('dateformat');
-var now = new Date();
 
-require('log-timestamp')(function() { return '[' + dateFormat(now, "mm/dd/yy h:MM:ss") + ']  %s' });
+require('log-timestamp')(function() { return '[' + dateFormat(new Date(), "mm/dd/yy h:MM:ss") + ']  %s' });
 
-//==== FRONT END
+//==== WEB FRONT END 
 console.log("Initializing...")
 
+
+// web logger
+app.use(morgan('short'))
+
+// Express should use public folder for serving 
+// the front-end files
 app.use(express.static('public'));
+
+
 
 // POST method route
 app.post('/commands/', function (req, res) {

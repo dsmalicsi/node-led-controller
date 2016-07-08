@@ -3,7 +3,9 @@ var client = new net.Socket();
 var utils = require('./utils');
 var patterns = require('./patterns');
 var express = require('express');
-var http = express();
+var app = express();
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 require( "console-stamp" )( console, {
     pattern: 'HH:mm:ss',
@@ -15,43 +17,46 @@ require( "console-stamp" )( console, {
 } );
 
 
-console.log("Initialize...")
+//==== FRONT END
+console.log("Initializing...")
 
-//
-//
-//http.get('/', function (req, res) {
-//  res.send('Hello World!');
-//});
-
-
-http.use(express.static('public'));
-
+app.use(express.static('public'));
 
 // POST method route
-http.post('/commands/', function (req, res) {
+app.post('/commands/', function (req, res) {
     command = req.body.command
     value = req.body.value
     
-  res.json('POST request to the homepage');
+    res.json('POST request to the homepage');
 });
+
+//==== SOCKET.IO EVENTS
+
+io.on('connection', function(socket){
+  console.log('User connected');
+});
+
 
 http.listen(3000, function () {
   console.log('Web Server listening on port 3000');
 });
 
 
+
+
+
+//== CLIENT FOR CONNECTING TO DEVICES
+
+
 client.setEncoding("hex");
 client.setKeepAlive(true, 30000);
-
-
-
     //hardcode IP for now
 var ip = '192.168.1.50'
 
 client.connect(5577, ip, function () {
     this.ip = ip
     this.is_on = false
-    console.log('Connecting to Gateway ('+this.ip+')...');
+    console.log('Connecting to device ('+this.ip+')...');
     
 });
 

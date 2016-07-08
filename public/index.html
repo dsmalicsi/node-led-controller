@@ -28,23 +28,22 @@
 </head>
 
 <body class="inverse">
-    
-    <div class="container">
-    <div class="page-header" id="banner">
-    <div class="row">
-      <div class="col-sm-12">
-        <h1>node-led-controller</h1>
-        <p class="lead">This is the front-end of the <a href="https://nodejs.org/en/">Node.js</a> client for controlling and programming LED Lights connected to a <a href="http://nodemcu.com/index_en.html">NodeMCU</a> WiFi chipset.
-            This also utilizes <a class="inverse" href="http://socket.io/">Socket.io</a> for real-time event-based communication with the devices.</p>
-      </div>
-      
-    </div>
-  </div>
-    
-    
-    </div>
 
-    
+    <div class="container">
+        <div class="page-header" id="banner">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h1>node-led-controller</h1>
+                    <p class="lead">This is the front-end of the <a href="https://nodejs.org/en/">Node.js</a> client for controlling and programming LED Lights connected to a <a href="http://nodemcu.com/index_en.html">NodeMCU</a> WiFi chipset. This also utilizes <a class="inverse" href="http://socket.io/">Socket.io</a> for real-time event-based communication with the devices.</p>
+                </div>
+
+            </div>
+        </div>
+
+
+    </div>
+    <span class="btn btn-material-deeppurple" onclick="javascript:$.snackbar({content: 'This is a JS generated snackbar, it rocks!'});">Create and show a snackbar.</span>
+
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script>
@@ -103,6 +102,15 @@
     <script src="js/material.min.js"></script>
     <script src="js/snackbar.min.js"></script>
 
+    <script>
+        var snackBarOptions = {
+            content: "default message", 
+            timeout: 5000, 
+            htmlAllowed: true, 
+            onClose: function () {} // callback
+        }
+    </script>
+
 
     <script src="js/jquery.nouislider.min.js"></script>
     <script>
@@ -127,6 +135,11 @@
                 }
             });
         });
+    </script>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
     </script>
 </body>
 

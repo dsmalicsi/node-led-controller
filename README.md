@@ -47,7 +47,8 @@ Installation of node modules are required, please see **package.json** for depen
 [GNU General Public License v3.0](https://github.com/dsmalicsi/node-led-controller/blob/master/LICENSE.md)
 
 
-    Node-led-controller, A Node.js application for controlling and programming LED Lights connected to a NodeMCU WiFi chipset.
+    Node-led-controller, A Node.js application for controlling and programming
+    LED Lights connected to a NodeMCU WiFi chipset.
     Copyright (C) 2016  Daryll Malicsi
 
     Node-led-controller is free software: you can redistribute it and/or modify

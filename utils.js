@@ -6,7 +6,7 @@ var patterns = require('./patterns');
 
 var max_delay = 0x1f;
 
-exports.checkMode = function(ww_level, pattern) {
+exports.checkMode = (ww_level, pattern) => {
     mode = "unknown"
     if (pattern == 0x61 || pattern == 0x62) {
         if (ww_level != 0)
@@ -19,10 +19,10 @@ exports.checkMode = function(ww_level, pattern) {
     else if (patterns.validPresetPattern(pattern))
         mode = "preset"
         
-    return mode
+    mode
 }
 
-exports.calcSpeed = function (delay) {
+exports.calcSpeed = (delay) => {
     delay = delay - 1;
     if (delay > (max_delay - 1) ) {
         delay = max_delay - 1
@@ -33,6 +33,6 @@ exports.calcSpeed = function (delay) {
     inv_speed = parseInt((delay * 100)/(max_delay)-1)
     speed = 100 - inv_speed
     
-    return speed
+    speed
 }
  

@@ -27,16 +27,15 @@ var patternNames = {
     "56": "seven_color_jumping"
 }
 
-exports.validPresetPattern = function (pattern) {
-
+exports.validPresetPattern = (pattern) => {
     if (pattern < 0x25 || pattern > 0x38)
-        return false
+        false
     else
-        return true
+        true
 }
 
-exports.getPatternName = function (pattern) {
+exports.getPatternName = (pattern) => {
 
-    return patternNames[pattern].replace(/_/g, " ").toLowerCase().replace(/\b\w/g, function (txt) { return txt.toUpperCase(); })
+    patternNames[pattern].replace(/_/g, " ").toLowerCase().replace(/\b\w/g, (txt) => { txt.toUpperCase(); })
 
 }

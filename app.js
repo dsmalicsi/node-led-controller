@@ -13,49 +13,43 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var dateFormat = require('dateformat');
 
-require('log-timestamp')(function() { return '[' + dateFormat(new Date(), "mm/dd/yy h:MM:ss") + ']  %s' });
+require('log-timestamp')(() => '[' + dateFormat(new Date(), "mm/dd/yy h:MM:ss") + ']  %s' );
 
 //==== WEB FRONT END 
-console.log("Initializing...")
-
+console.log("Initializing...");
 
 // web logger
-app.use(morgan('short'))
+morgan.format('logdate', () => dateFormat(new Date(), "mm/dd/yy h:MM:ss"));
+app.use(morgan('[:logdate] short'));
 
 // Express should use public folder for serving 
 // the front-end files
 app.use(express.static('public'));
+ 
 
-
-
-// POST method route
-app.post('/commands/', function (req, res) {
+// possible routes
+app.post('/commands', (req, res) => {
     command = req.body.command
     value = req.body.value
 
     res.json('POST request to the homepage');
 });
 
-//==== SOCKET.IO EVENTS
-
-io.on('connection', function (socket) {
-    console.log('User connected', socket.handshake.address);
-     
-    socket.on('disconnect', function () {
-        console.log('User disconnected', socket.handshake.address);
-    });
-    
-});
-
-
-
-
-http.listen(3000, function () {
+http.listen(3000, () => {
     console.log('Web Server listening on port 3000');
 });
 
+//==== SOCKET.IO EVENTS
 
-
+io.on('connection', (socket) => {
+    console.log('User connected', socket.handshake.address);
+     
+    socket.on('disconnect', () => {
+        console.log('User disconnected', socket.handshake.address);
+ 
+    });
+    
+});
 
 
 //== CLIENT FOR CONNECTING TO DEVICES
@@ -66,22 +60,22 @@ client.setKeepAlive(true, 30000);
 //hardcode IP for now
 var ip = '192.168.1.50'
 
-client.connect(5577, ip, function () {
+client.connect(5577, ip, () => {
     this.ip = ip
     this.is_on = false
     console.log('Connecting to device (' + this.ip + ')...');
 
 });
 
-client.on('connect', function () {
+client.on('connect', () => {
     console.log('Connected to ' + this.ip + '!');
-    checkState(client, function (data) {
+    checkState(client, (data) => {
         console.log(data)
     })
 
 })
 
-client.on('data', function (data) {
+client.on('data', (data) => {
     console.log('RX:', data.replace(/(.{1,2})/g, '$1 '), "[" + data.length / 2 + "]");
     var res = read(data, data.length)
     var res_len = data.length / 2
@@ -156,16 +150,16 @@ client.on('data', function (data) {
     //    client.destroy(); // kill client after server's response
 });
 
-client.on('error', function (err) {
+client.on('error', (err) => {
     console.log('Error', err);
 });
-client.on('close', function () {
+client.on('close', () => {
     console.log('Connection closed');
 });
 
 function checkState(client, callback) {
     var msg = [0x81, 0x8a, 0x8b];
-    send(client, msg, function (data) {
+    send(client, msg, (data) => {
 
         callback = null;
 
@@ -178,7 +172,7 @@ function turnOn(client, callback) {
     if (client.is_on == true) {
         console.log("already turned on!")
     } else {
-        send(client, msg, function (data) {
+        send(client, msg, (data) => {
 
             callback = null;
         })
@@ -190,7 +184,7 @@ function turnOff(client, callback) {
     if (client.is_on == false) {
         console.log("already turned off!")
     } else {
-        send(client, msg, function (data) {
+        send(client, msg, (data) => {
 
             callback = null
 
@@ -213,7 +207,7 @@ function send(client, msg, callback) {
     var crc = sum(msg)
     msg.push(crc)
     console.log("TX:", msg, "0x" + crc.toString(16).replace(/^[0-9]/g, ''))
-    client.write(new Buffer(msg), function (err, data) {
+    client.write(new Buffer(msg), (err, data) => {
 
         if (!err) {
             callback = {

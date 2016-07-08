@@ -5,6 +5,7 @@ For quick and easy control access, a web front-end is made available for the use
 
 It is possible that this application can be expanded and may serve as an API for use with other projects once all basic functions are completed.
 
+Internet-of-Things is awesome!
 
 ----------
 **Functions:**
@@ -18,17 +19,23 @@ It is possible that this application can be expanded and may serve as an API for
 ----------
 **TODO**
 
-- Add function for scanning devices
+- Add function for scanning devices in local network
+- Add Remote-network support. Control your devices away from home/office
+- Add Security
+- Add a database (NoSQL)
 
 ----------
 **Future Plans**
+
 *I can't tell if I will stay committed on this project, but here are some possibilities that I can think of...*
 
 - Create RESTful API for all functions
-- Add support for other devices that are already available in the market by reverse-engineering
+- Add support for other WiFi-enabled LED devices that are already available in the market by reverse-engineering
+- Possibly integrate this with a larger app for IoT that I might come up with in the future
 
 
 ----------
 **Notes**
+
 This app was built on **node v4.4.7**. It should work fine on newer versions.
 Installation of node modules are required, please see **package.json** for dependencies.

@@ -25,9 +25,10 @@
   },
   "homepage": "https://github.com/dsmalicsi/node-led-controller#readme",
   "dependencies": {
-    "console-stamp": "^0.2.2",
+    "dateformat": "^1.0.12",
     "express": "^4.14.0",
     "lodash": "^4.13.1",
+    "log-timestamp": "^0.1.2",
     "socket.io": "^1.4.8"
   }
 }

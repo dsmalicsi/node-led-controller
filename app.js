@@ -11,15 +11,10 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-require("console-stamp")(console, {
-    pattern: 'HH:mm:ss',
-    colors: {
-        stamp: "yellow",
-        label: "white",
-        metadata: "green"
-    }
-});
+var dateFormat = require('dateformat');
+var now = new Date();
 
+require('log-timestamp')(function() { return '[' + dateFormat(now, "mm/dd/yy h:MM:ss") + ']  %s' });
 
 //==== FRONT END
 console.log("Initializing...")
@@ -37,8 +32,15 @@ app.post('/commands/', function (req, res) {
 //==== SOCKET.IO EVENTS
 
 io.on('connection', function (socket) {
-    console.log('User connected');
+    console.log('User connected', socket.handshake.address);
+     
+    socket.on('disconnect', function () {
+        console.log('User disconnected', socket.handshake.address);
+    });
+    
 });
+
+
 
 
 http.listen(3000, function () {

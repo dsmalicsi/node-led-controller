@@ -88,7 +88,12 @@
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4><i class="material-icons text-success">wifi</i> <i class="material-icons text-success">wb_cloudy</i> <i class="material-icons text-warning">perm_scan_wifi</i> <i class="material-icons text-muted">signal_wifi_off</i>  <b>DEVICE 1</b> (192.168.1.50:5577)</h4></div>
+                        <h4>
+                            <i id="connect-ok" class="material-icons text-success">wifi</i> 
+                            <i id="connect-remote" class="material-icons text-success">wb_cloudy</i> 
+                            <i id="connect-warn" class="material-icons text-warning">perm_scan_wifi</i> 
+                            <i id="connect-off" class="material-icons text-muted">signal_wifi_off</i>  
+                            <b>DEVICE 1</b> (<span id="device-ip">192.168.1.50</span>:<span id="device-port">5577</span>)</h4></div>
                     <div class="panel-body">
                         <div class="col-xs-3 col-sm-2 col-md-1">
 
@@ -182,6 +187,32 @@
     <script src="js/snackbar.min.js"></script>
     <script src="js/nouislider.js"></script>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        var socket = io();
+        
+        socket.on('connect', () => {
+            $("#connect-ok").show()
+            $("#connect-remote").hide()
+            $("#connect-off").hide()
+            $("#connect-warn").hide()
+            console.log('Connected')
+            $.snackbar({content: '<b>SOCKET:</b> Connected to node server!',class:'success',timeout:5000});
+        })
+        
+        socket.on('disconnect', () => {
+            $("#connect-ok").hide()
+            $("#connect-remote").hide()
+            $("#connect-off").show()
+            $("#connect-warn").show()
+            console.log('Disonnected')
+            
+           $.snackbar({content: '<b>ERROR:</b> Socket disconnected.<br>Please check node server for errors.',class:'error',timeout:5000});
+        })
+        
+        
+    </script>
+    
     <script>
         var snackBarOptions = {
             content: "default message",

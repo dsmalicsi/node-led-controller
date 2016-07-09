@@ -257,7 +257,15 @@
                 value = brightnessSlider.noUiSlider.get();
                 $("span#level-brightness").html(value)
                 //Send socket here
-                
+                socket.emit('command',
+                {
+                    'cmd': 'brightness',
+                    'value': 'value',
+                    'device': '192.168.1.50'
+                    
+                }, function (data) {
+                  console.log(data); // data will be 'woot'
+                });
             });
             
                

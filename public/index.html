@@ -40,6 +40,32 @@
         .snackbar.info {
             background-color: #0fb2fc;
         }
+        
+        .noUi-tooltip {
+            margin-top: 18px;
+        }
+        
+        .panel-body {
+            background-color: #424242 !important;
+        }
+        
+        .btn-on {
+            background-color: #03a9f4 !important;
+        }
+        
+        .btn-off {
+            background-color: rgba(153, 153, 153, 0.2) !important;
+        }
+        
+        h4 .material-icons {
+            font-size: 22px !important;
+            vertical-align: bottom;
+        }
+        /*
+        .togglebutton {
+            margin-left: 5px;
+        }
+*/
     </style>
 
 </head>
@@ -57,9 +83,45 @@
             </div>
         </div>
 
+        <div class="row">
+
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4><i class="material-icons text-success">wifi</i> <i class="material-icons text-success">wb_cloudy</i> <i class="material-icons text-warning">perm_scan_wifi</i> <i class="material-icons text-muted">signal_wifi_off</i>  <b>DEVICE 1</b> (192.168.1.50:5577)</h4></div>
+                    <div class="panel-body">
+                        <div class="col-xs-3 col-sm-2 col-md-1">
+
+
+                            <label>Power</label>
+                            <div id="control-power" class="togglebutton btn-group-sm">
+                                <a href="javascript:void(0)" id="btn-power" class="btn btn-info btn-fab">
+                                    <i class="material-icons">power_settings_new</i>
+                                    <input id="btn-power-value" name="btn-power-value" type="checkbox" class="hidden" checked>
+
+                                </a>
+                            </div>
+
+                        </div>
+
+                        <div id="control-brightness" class="col-xs-9 col-sm-6 col-md-4">
+                            <label>Brightness: <span id="level-brightness">5</span>%</label>
+                            <div id="slider-brightness" class="slider slider-info shor" style=""></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+        </div>
 
     </div>
-    <span class="btn btn-material-deeppurple" onclick="javascript:$.snackbar({content: '<b>ERROR</b>',class:'error'});">Create and show a snackbar.</span>
+
+
+    <!--    <span class="btn btn-material-deeppurple" onclick="javascript:$.snackbar({content: '<b>ERROR</b>',class:'error'});">Create and show a snackbar.</span>-->
 
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
@@ -117,6 +179,7 @@
     </script>
     <script src="js/ripples.min.js"></script>
     <script src="js/material.min.js"></script>
+    <script src="js/wNumb.js"></script>
     <script src="js/snackbar.min.js"></script>
 
     <script>
@@ -129,28 +192,41 @@
     </script>
 
 
-    <script src="js/jquery.nouislider.min.js"></script>
+    <script src="js/nouislider.js"></script>
+
     <script>
         $(function () {
             $.material.init();
-            $(".shor").noUiSlider({
-                start: 40,
-                connect: "lower",
-                range: {
-                    min: 0,
-                    max: 100
-                }
-            });
+            var brightnessSlider = document.getElementById('slider-brightness');
 
-            $(".svert").noUiSlider({
-                orientation: "vertical",
-                start: 40,
-                connect: "lower",
+            noUiSlider.create(brightnessSlider, {
+                start: 5,
+                connect: 'lower',
                 range: {
-                    min: 0,
-                    max: 100
+                    'min': 5,
+                    'max': 100
                 }
             });
+            //             
+            //            $(".shor").noUiSlider({
+            //                start: 0,
+            //                connect: "lower",
+            //                tooltips: [true,  wNumb({ decimals: 1 }) ],
+            //                range: {
+            //                    min: 0,
+            //                    max: 100
+            //                }
+            //            });
+            //
+            //            $(".svert").noUiSlider({
+            //                orientation: "vertical",
+            //                start: 40,
+            //                connect: "lower",
+            //                range: {
+            //                    min: 0,
+            //                    max: 100
+            //                }
+            //            });
         });
     </script>
 

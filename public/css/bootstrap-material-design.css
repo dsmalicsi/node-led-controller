@@ -42,7 +42,7 @@ body {
   background-color: #EEEEEE;
 }
 body.inverse {
-  background: #333333;
+  background: #303030;
 }
 body.inverse,
 body.inverse .form-control {
@@ -78,7 +78,7 @@ h6 {
 a,
 a:hover,
 a:focus {
-  color: #3498db;
+  color: #03a9f4;
 }
 a .material-icons,
 a:hover .material-icons,
@@ -235,7 +235,7 @@ body .container-fluid .jumbotron-danger {
 .input-group-btn .btn:not(.btn-raised):not(.btn-link):hover,
 .btn:not(.btn-raised):not(.btn-link):focus,
 .input-group-btn .btn:not(.btn-raised):not(.btn-link):focus {
-  background-color: rgba(153, 153, 153, 0.2);
+  background-color: rgba(255, 255, 255, 0.6);
 }
 .theme-dark .btn:not(.btn-raised):not(.btn-link):hover,
 .theme-dark .input-group-btn .btn:not(.btn-raised):not(.btn-link):hover,
@@ -3168,11 +3168,11 @@ hr.on-light {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
-  width: 12px;
-  height: 12px;
-  left: -10px;
-  top: -5px;
-  cursor: ew-resize;
+  width: 20px;
+  height: 20px;
+  left: -5px;
+  top: -8px;
+  cursor: pointer;
   border-radius: 100%;
   -webkit-transition: all 0.2s ease-out;
        -o-transition: all 0.2s ease-out;
@@ -3196,12 +3196,12 @@ hr.on-light {
 .noUi-origin {
   margin: 0;
   border-radius: 0;
-  height: 2px;
+  height: 5px;
   background: #c8c8c8;
 }
 .noUi-origin[style^="left: 0"] .noUi-handle {
-  background-color: #fff;
-  border: 2px solid #c8c8c8;
+  background-color: #DDD;
+  border: 5px solid #c8c8c8;
 }
 .noUi-origin[style^="left: 0"] .noUi-handle.noUi-active {
   border-width: 1px;
@@ -3210,18 +3210,20 @@ hr.on-light {
   border-radius: 2px;
 }
 .noUi-horizontal {
-  height: 2px;
+  height: 5px;
   margin: 15px 0;
+  width: 90%;
+  margin-left: 2.5%;
 }
 .noUi-vertical {
   height: 100%;
-  width: 2px;
+  width: 5px;
   margin: 0 15px;
   display: inline-block;
 }
 .noUi-handle.noUi-active {
-  -webkit-transform: scale3d(2.5, 2.5, 1);
-          transform: scale3d(2.5, 2.5, 1);
+  -webkit-transform: scale3d(1.25, 1.25, 1);
+          transform: scale3d(1.25, 1.25, 1);
 }
 [disabled].noUi-slider {
   opacity: 0.5;

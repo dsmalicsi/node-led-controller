@@ -13,7 +13,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var dateFormat = require('dateformat');
 
-require('log-timestamp')(() => '[' + dateFormat(new Date(), "mm/dd/yy h:MM:ss") + ']  %s' );
+require('log-timestamp')(() => '[' + dateFormat(new Date(), "mm/dd/yy h:MM:ss") + ']  %s');
 
 //==== WEB FRONT END 
 console.log("Initializing...");
@@ -25,7 +25,7 @@ app.use(morgan('[:logdate]  :remote-addr :remote-user :method :url HTTP/:http-ve
 // Express should use public folder for serving 
 // the front-end files
 app.use(express.static('public'));
- 
+
 
 // possible routes
 app.post('/commands', (req, res) => {
@@ -43,17 +43,28 @@ http.listen(3000, () => {
 
 io.on('connection', (socket) => {
     console.log('User connected', socket.handshake.address);
-     
+
     socket.on('disconnect', () => {
         console.log('User disconnected', socket.handshake.address);
- 
-    }); 
-    
+
+    });
+
     socket.on('command', (command) => {
         console.log(command.cmd, command.value, command.device, socket.handshake.address);
- 
+        switch (command.cmd) {
+
+        case "brightness":
+            //send brightness command here
+            console.log("Changed brightness")
+            break;
+        default:
+            console.log("Invalid command")
+            break;
+
+        }
+
     });
-    
+
 });
 
 

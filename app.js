@@ -79,8 +79,8 @@ io.on('connection', (socket) => {
             r = utils.percentToByte(val)
             g = utils.percentToByte(val)
             b = utils.percentToByte(val)
-            console.log(r,g,b)
-            
+            console.log(r, g, b)
+
             changeRgb(clt, r, g, b)
             
             console.log("Changed brightness")
@@ -164,8 +164,8 @@ for (var i in devices) {
             mode = utils.checkMode(ww_level, pattern)
             delay = res[5]
             speed = utils.calcSpeed(delay)
-            
-                //		
+
+            //		
 
             if (mode == "color") {
                 red = res[6]
@@ -206,9 +206,9 @@ for (var i in devices) {
         console.log('Error', err);
     });
     clients[i].on('close', function () {
-        console.log('Connection closed',this.ip);
+        console.log('Connection closed', this.ip);
     });
-    
+
 }
 
 //search clients array using lodash
@@ -254,16 +254,11 @@ function turnOff(client, callback) {
     }
 }
 
-function changeRgb(client, r, g, b, callback) {
-    var msg = new Uint16Array(0x31)
-    msg.append(r)
-    msg.append(g)
-    msg.append(b)
-    msg.append(0x00)
-    msg.append(0xf0)
-    msg.append(0x0f)
+function changeRgb(client, r, g, b) {
+    var msg = [0x31, r, g, b, 0x00, 0xf0, 0x0f]
+
     send(client, msg, (data) => {
-        callback = data
+        console.log(data)
     })
 }
 

@@ -125,6 +125,34 @@
 
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
+
+
+    <script>
+        $(document).ready(function () {
+
+            //Power button event. TODO: Make dynamic.
+            $('#btn-power').on("click", function () {
+                console.log($(this).find("#btn-power-value").is(":checked"))
+                if ($(this).find("#btn-power-value").is(":checked")) {
+                    console.log("Is On, will turn off")
+                    $(this).trigger("focusout")
+                    $(this).find("#btn-power-value").prop('checked', false);
+                    $(this).removeClass("btn-on")
+                    $(this).addClass("btn-off")
+                } else {
+                    console.log("Is off, will turn on")
+                    $(this).trigger("focusout")
+                    $(this).find("#btn-power-value").prop('checked', true);
+                    $(this).removeClass("btn-off")
+                    $(this).addClass("btn-on")
+                        //Disable brigthness dimmer and other controls.
+                }
+            })
+
+
+        });
+    </script>
+
     <script>
         (function () {
 

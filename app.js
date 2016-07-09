@@ -241,10 +241,23 @@ function turnOff(client, callback) {
     } else {
         send(client, msg, (data) => {
 
-            callback = null
+            callback = data
 
         })
     }
+}
+
+function changeRgb(client, r, g, b, callback) {
+    var msg = new Uint16Array(0x31)
+    msg.append(r)
+    msg.append(g)
+    msg.append(b)
+    msg.append(0x00)
+    msg.append(0xf0)
+    msg.append(0x0f)
+    send(client, msg, (data) => {
+        callback = data
+    })
 }
 
 

@@ -157,6 +157,7 @@ for (var i in devices) {
             mode = utils.checkMode(ww_level, pattern)
             delay = res[5]
             speed = utils.calcSpeed(delay)
+            
                 //		
 
             if (mode == "color") {
@@ -166,7 +167,7 @@ for (var i in devices) {
                     //			color_str
                 mode_str = "Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
             } else if (mode == "ww") {
-                mode_str = "Warm White: %" //byteToPercent(ww_level))
+                mode_str = "Warm White: " + utils.byteToPercent(ww_level) + "%"
             } else if (mode == "preset") {
                 pattern_str = patterns.getPatternName(pattern)
                 mode_str = pattern_str + " (Speed " + speed + "%)"

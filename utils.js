@@ -36,3 +36,18 @@ exports.calcSpeed = (delay) => {
     return speed
 }
  
+exports.byteToPercent = (value) => {
+    if (value > 255)
+        value = 255
+    if (value < 0)
+        value = 0
+    return parseInt((value * 100)/255)
+}
+
+exports.percentToByte = (value) => {
+    if (value > 100)
+        value = 100
+    if (value < 0)
+        value = 0
+    return parseInt((value * 255)/100)
+}

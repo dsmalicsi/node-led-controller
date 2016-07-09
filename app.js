@@ -3,7 +3,6 @@
 */
 
 var net = require('net');
-var client = new net.Socket();
 var utils = require('./utils');
 var patterns = require('./patterns');
 var express = require('express');
@@ -12,6 +11,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var dateFormat = require('dateformat');
+var _ = require('lodash');
 
 require('log-timestamp')(() => '[' + dateFormat(new Date(), "mm/dd/yy h:MM:ss") + ']  %s');
 
@@ -69,107 +69,118 @@ io.on('connection', (socket) => {
 
 
 //== CLIENT FOR CONNECTING TO DEVICES
-client.setEncoding("hex");
-client.setKeepAlive(true, 30000);
+
+
 //hardcode IP for now
-var ip = '192.168.1.50'
+var devices = ['192.168.1.50','192.168.1.51','192.168.1.52']
+var client = []
 
-client.connect(5577, ip, () => {
-    this.ip = ip
-    this.is_on = false
-    console.log('Connecting to device (' + this.ip + ')...');
+//make loop of devices to store all client instances in array
 
-});
+for (var i in devices) {
+    
+    console.log(i)
+    client[i] = new net.Socket();
+    
+    client[i].setEncoding("hex");
+    client[i].setKeepAlive(true, 30000);
+    client[i].ip = devices[i]
+    client[i].is_on = false
+    console.log('Connecting to device (' + devices[i] + ')...');
 
-client.on('connect', () => {
-    console.log('Connected to ' + this.ip + '!');
-    checkState(client, (data) => {
-        console.log(data)
+    client[i].connect(5577, devices[i]);
+
+    client[i].on('connect', function (err) {
+        console.log('Connected to ' + this.ip + '!');
+        checkState(this, (data) => {
+            console.log(data)
+        })
     })
 
-})
+    client[i].on('data', (data) => {
+        console.log('RX:', data.replace(/(.{1,2})/g, '$1 '), "[" + data.length / 2 + "]");
+        var res = read(data, data.length)
+        var res_len = data.length / 2
 
-client.on('data', (data) => {
-    console.log('RX:', data.replace(/(.{1,2})/g, '$1 '), "[" + data.length / 2 + "]");
-    var res = read(data, data.length)
-    var res_len = data.length / 2
+        //Translate Operations
+        switch (res_len) {
+        case 0:
+            console.log("OP: Lights Off")
+            break;
+        case 1:
+            if (res[0] == 0x30) {
+                console.log("RX: Light State Changed, checking...")
+                setTimeout(checkState(client[i]), 1000)
+            } else {
+                console.lg("RX: Unknown State Changed")
+            }
 
-    //Translate Operations
-    switch (res_len) {
-    case 0:
-        console.log("OP: Lights Off")
-        break;
-    case 1:
-        if (res[0] == 0x30) {
-            console.log("RX: Light State Changed, checking...")
-            setTimeout(checkState(client), 1000)
-        } else {
-            console.lg("RX: Unknown State Changed")
+            break;
+        case 14: //Check State
+            console.log("OP: Check State")
+
+            power_state = res[2]
+            power_str = "Unknown power state"
+
+            if (power_state == 0x23) {
+                this.is_on = true
+                power_str = "ON"
+            } else if (power_state == 0x24) {
+                this.is_on = false
+                power_str = "OFF"
+            }
+
+            pattern = res[3]
+            ww_level = res[9]
+            mode = utils.checkMode(ww_level, pattern)
+            delay = res[5]
+            speed = utils.calcSpeed(delay)
+                //		
+
+            if (mode == "color") {
+                red = res[6]
+                green = res[7]
+                blue = res[8]
+                    //			color_str
+                mode_str = "Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
+            } else if (mode == "ww") {
+                mode_str = "Warm White: %" //byteToPercent(ww_level))
+            } else if (mode == "preset") {
+                pattern_str = patterns.getPatternName(pattern)
+                mode_str = pattern_str + " (Speed " + speed + "%)"
+            } else if (mode == "custom") {
+                mode_str = "Custom pattern (Speed " + speed + "%)"
+            } else {
+                mode_str = "Unknown mode 0x" ///
+            }
+
+            if (pattern == 0x62) {
+                mode_str += " (tmp)"
+                client[i].state_str = power_str + " [" + mode_str + "]"
+            }
+            console.log("=================================")
+            console.log("POWER:", power_str, "PTRN:", pattern.toString(16), "WW:", ww_level)
+            console.log("MODE:", mode_str)
+            console.log("DELAY:", delay)
+            console.log("=================================")
+            break;
+        default:
+            console.log(res)
+            console.log("Unknown response", res_len)
+            break;
         }
+        //    client.destroy(); // kill client after server's response
+    });
 
-        break;
-    case 14: //Check State
-        console.log("OP: Check State")
+    client[i].on('error', (err) => {
+        console.log('Error', err);
+    });
+    client[i].on('close', () => {
+        console.log('Connection closed',this.ip);
+    });
+    
+}
 
-        power_state = res[2]
-        power_str = "Unknown power state"
-
-        if (power_state == 0x23) {
-            this.is_on = true
-            power_str = "ON"
-        } else if (power_state == 0x24) {
-            this.is_on = false
-            power_str = "OFF"
-        }
-
-        pattern = res[3]
-        ww_level = res[9]
-        mode = utils.checkMode(ww_level, pattern)
-        delay = res[5]
-        speed = utils.calcSpeed(delay)
-            //		
-
-        if (mode == "color") {
-            red = res[6]
-            green = res[7]
-            blue = res[8]
-                //			color_str
-            mode_str = "Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
-        } else if (mode == "ww") {
-            mode_str = "Warm White: %" //byteToPercent(ww_level))
-        } else if (mode == "preset") {
-            pattern_str = patterns.getPatternName(pattern)
-            mode_str = pattern_str + " (Speed " + speed + "%)"
-        } else if (mode == "custom") {
-            mode_str = "Custom pattern (Speed " + speed + "%)"
-        } else {
-            mode_str = "Unknown mode 0x" ///
-        }
-
-        if (pattern == 0x62) {
-            mode_str += " (tmp)"
-            client.state_str = power_str + " [" + mode_str + "]"
-        }
-        console.log("=================================")
-        console.log("POWER:", power_str, "PTRN:", pattern.toString(16), "WW:", ww_level)
-        console.log("MODE:", mode_str)
-        console.log("DELAY:", delay)
-        console.log("=================================")
-        break;
-    default:
-        console.log(res)
-        console.log("Unknown response", res_len)
-        break;
-    }
-    //    client.destroy(); // kill client after server's response
-});
-
-client.on('error', (err) => {
-    console.log('Error', err);
-});
-client.on('close', () => {
-    console.log('Connection closed');
-});
 
 function checkState(client, callback) {
     var msg = [0x81, 0x8a, 0x8b];

@@ -50,19 +50,33 @@ io.on('connection', (socket) => {
 
     });
 
-    socket.on('command', (command) => {
+    socket.on('hold', (command) => {
         
+        val = command.value;
+        dev = command.device;
+        
+        clt = findClient(dev);
+        clt.hold = val;
+        
+        if (val) {
+            sleep.usleep(70000)
+            checkState(clt)
+        }
+        
+    })
+
+    socket.on('command', (command) => {
+
         cmd = command.cmd;
         val = command.value;
         dev = command.device;
-        clt = findClient(dev)
-        
+        clt = findClient(dev);
+
         console.log(cmd, val, dev, socket.handshake.address);
 
         switch (cmd) {
 
         case "power":
-            //send brightness command here
             if (val == "on") {
                 turnOn(clt, (data) => {
                     console.log(data)
@@ -114,6 +128,7 @@ for (var i in devices) {
     clients[i].setKeepAlive(true, 30000);
     clients[i].ip = devices[i]
     clients[i].is_on = false
+    clients[i].hold = false
     console.log('Connecting to device (' + devices[i] + ')...');
 
     clients[i].connect(5577, devices[i]);
@@ -137,9 +152,15 @@ for (var i in devices) {
             break;
         case 1:
             if (res[0] == 0x30) {
-                console.log("RX: Light State Changed, checking...")
-                sleep.usleep(70000)
-                checkState(this)
+                if (!this.hold) {
+                    console.log("RX: Light State Changed, checking...")
+                    sleep.usleep(70000)
+                    checkState(this)
+                }
+                else {
+                    console.log("RX: Skip Check State")
+                }
+
             } else {
                 console.lg("RX: Unknown State Changed")
             }

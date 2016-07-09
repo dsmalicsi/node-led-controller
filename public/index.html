@@ -180,7 +180,7 @@
 
         })();
     </script>
-    
+
     <script src="js/ripples.min.js"></script>
     <script src="js/material.min.js"></script>
     <script src="js/wNumb.js"></script>
@@ -190,29 +190,35 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
-        
+
         socket.on('connect', () => {
             $("#connect-ok").show()
             $("#connect-remote").hide()
             $("#connect-off").hide()
             $("#connect-warn").hide()
             console.log('Connected')
-            $.snackbar({content: '<b>SOCKET:</b> Connected to node server!',class:'success',timeout:5000});
+            $.snackbar({
+                content: '<b>SOCKET:</b> Connected to node server!',
+                class: 'success',
+                timeout: 5000
+            });
         })
-        
+
         socket.on('disconnect', () => {
             $("#connect-ok").hide()
             $("#connect-remote").hide()
             $("#connect-off").show()
             $("#connect-warn").show()
             console.log('Disonnected')
-            
-           $.snackbar({content: '<b>ERROR:</b> Socket disconnected.<br>Please check node server for errors.',class:'error',timeout:5000});
+
+            $.snackbar({
+                content: '<b>ERROR:</b> Socket disconnected.<br>Please check node server for errors.',
+                class: 'error',
+                timeout: 5000
+            });
         })
-        
-        
     </script>
-    
+
     <script>
         var snackBarOptions = {
             content: "default message",
@@ -220,55 +226,75 @@
             htmlAllowed: true,
             onClose: function () {} // callback
         };
-        
+
         //Number formatter
         var decimalFormat = wNumb({
             decimals: 0
         });
-        
+
         //Ranges
         var brightnessRange = {
-                    'min': 5,
-                    'max': 100
-                };
-         
-         
+            'min': 5,
+            'max': 100
+        };
+
+
         //Document.ready
         $(function () {
-            
+
             //Template init
             $.material.init();
-         
+
             //Slider init
             var brightnessSlider = document.getElementById('slider-brightness');
 
             noUiSlider.create(brightnessSlider, {
                 animate: true,
-	            animationDuration: 300,
+                animationDuration: 300,
                 start: 5,
-                step: 1,
+                step: 5,
                 connect: 'lower',
                 range: brightnessRange,
                 format: decimalFormat
             });
-            
+
             //Dimmer brightness event. TODO: Make dynamic also
             brightnessSlider.noUiSlider.on('slide', function () {
                 value = brightnessSlider.noUiSlider.get();
                 $("span#level-brightness").html(value)
-                //Send socket here
-                socket.emit('command',
-                {
+                    //Send socket here
+                socket.emit('command', {
                     'cmd': 'brightness',
                     'value': value,
                     'device': '192.168.1.50'
-                    
+
                 }, function (data) {
-                  console.log(data); 
+                    console.log(data);
                 });
             });
-            
-               
+
+            //Prevent the client from auto-refreshing state 
+            //while sliding to reduce spam
+            brightnessSlider.noUiSlider.on('start', function () {
+                socket.emit('hold', {
+                    'value': true,
+                    'device': '192.168.1.50'
+                }, function (data) {
+                    console.log(data);
+                });
+            });
+
+            //Resume the client auto-refreshing state after sliding
+            brightnessSlider.noUiSlider.on('end', function () {
+                socket.emit('hold', {
+                    'value': false,
+                    'device': '192.168.1.50'
+                }, function (data) {
+                    console.log(data);
+                });
+            });
+
+
             //Power button event. TODO: Make dynamic.
             $('#btn-power').on("click", function () {
                 console.log($(this).find("#btn-power-value").is(":checked"))
@@ -278,42 +304,43 @@
                     $(this).find("#btn-power-value").prop('checked', false);
                     $(this).removeClass("btn-on")
                     $(this).addClass("btn-off")
-                    
-                    socket.emit('command',
-                    {
+
+                    socket.emit('command', {
                         'cmd': 'power',
                         'value': 'off',
                         'device': '192.168.1.50'
 
                     }, function (data) {
-                      console.log(data); 
+                        console.log(data);
                     });
                     
+                    //Disable brightness dimmer and other controls.
                     brightnessSlider.setAttribute('disabled', true);
                     brightnessSlider.noUiSlider.set(0)
+                    
                 } else {
                     console.log("Is off, will turn on")
                     $(this).trigger("focusout")
                     $(this).find("#btn-power-value").prop('checked', true);
                     $(this).removeClass("btn-off")
                     $(this).addClass("btn-on")
-                    
-                    socket.emit('command',
-                    {
+
+                    socket.emit('command', {
                         'cmd': 'power',
                         'value': 'on',
                         'device': '192.168.1.50'
 
                     }, function (data) {
-                      console.log(data); 
+                        console.log(data);
                     });
-                    
+
+                    //Disable brightness dimmer and other controls.
                     brightnessSlider.removeAttribute('disabled');
-                    brightnessSlider.noUiSlider.set(60);
-                        //Disable brigthness dimmer and other controls.
+                    brightnessSlider.noUiSlider.set(100);
+                    
                 }
             })
-            
+
 
 
 
@@ -340,7 +367,7 @@
         });
     </script>
 
-    
+
 </body>
 
 </html>

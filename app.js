@@ -12,6 +12,7 @@ var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var dateFormat = require('dateformat');
 var _ = require('lodash');
+var sleep = require('sleep');
 
 require('log-timestamp')(() => '[' + dateFormat(new Date(), "mm/dd/yy h:MM:ss") + ']  %s');
 
@@ -130,6 +131,7 @@ for (var i in devices) {
         case 1:
             if (res[0] == 0x30) {
                 console.log("RX: Light State Changed, checking...")
+                sleep.usleep(70000)
                 checkState(this)
             } else {
                 console.lg("RX: Unknown State Changed")

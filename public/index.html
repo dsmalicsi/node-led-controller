@@ -253,7 +253,7 @@
             });
             
             //Dimmer brightness event. TODO: Make dynamic also
-            brightnessSlider.noUiSlider.on('update', function () {
+            brightnessSlider.noUiSlider.on('slide', function () {
                 value = brightnessSlider.noUiSlider.get();
                 $("span#level-brightness").html(value)
                 //Send socket here
@@ -278,6 +278,17 @@
                     $(this).find("#btn-power-value").prop('checked', false);
                     $(this).removeClass("btn-on")
                     $(this).addClass("btn-off")
+                    
+                    socket.emit('command',
+                    {
+                        'cmd': 'power',
+                        'value': 'off',
+                        'device': '192.168.1.50'
+
+                    }, function (data) {
+                      console.log(data); 
+                    });
+                    
                     brightnessSlider.setAttribute('disabled', true);
                     brightnessSlider.noUiSlider.set(0)
                 } else {
@@ -286,6 +297,17 @@
                     $(this).find("#btn-power-value").prop('checked', true);
                     $(this).removeClass("btn-off")
                     $(this).addClass("btn-on")
+                    
+                    socket.emit('command',
+                    {
+                        'cmd': 'power',
+                        'value': 'on',
+                        'device': '192.168.1.50'
+
+                    }, function (data) {
+                      console.log(data); 
+                    });
+                    
                     brightnessSlider.removeAttribute('disabled');
                     brightnessSlider.noUiSlider.set(60);
                         //Disable brigthness dimmer and other controls.

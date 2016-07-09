@@ -23,8 +23,8 @@
     <!-- Bootstrap Material Design -->
     <link href="css/bootstrap-material-design.css" rel="stylesheet">
     <link href="css/ripples.min.css" rel="stylesheet">
-
-
+    <link href="css/wheelcolorpicker.css" rel="stylesheet">
+    <link href="css/wheelcolorpicker.dark.css" rel="stylesheet">
     <link href="css/snackbar.min.css" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -61,6 +61,11 @@
             font-size: 22px !important;
             vertical-align: bottom;
         }
+        .jQWCP-wWidget.jQWCP-block {
+            border: 0px;
+            background: 0px;
+            box-shadow: none;
+        }
         /*
         .togglebutton {
             margin-left: 5px;
@@ -93,7 +98,9 @@
                             <i id="connect-remote" class="material-icons text-success">wb_cloudy</i> 
                             <i id="connect-warn" class="material-icons text-warning">perm_scan_wifi</i> 
                             <i id="connect-off" class="material-icons text-muted">signal_wifi_off</i>  
-                            <b>DEVICE 1</b> (<span id="device-ip">192.168.1.50</span>:<span id="device-port">5577</span>)</h4></div>
+                            <b>DEVICE 1</b> (<span id="device-ip">192.168.1.50</span>:<span id="device-port">5577</span>)
+                        </h4>
+                    </div>
                     <div class="panel-body">
                         <div class="col-xs-3 col-sm-2 col-md-1">
 
@@ -112,6 +119,17 @@
                         <div id="control-brightness" class="col-xs-9 col-sm-6 col-md-4">
                             <label>Brightness: <span id="level-brightness">5</span>%</label>
                             <div id="slider-brightness" class="slider slider-info shor" style=""></div>
+                        </div>
+                        
+                        <div id="control-rgb" class="col-xs-12 col-sm-12 col-md-4">
+                            <label>Color: </label><br>
+                            <input id="control-rgb-input" type="text" data-wheelcolorpicker=""
+                                   data-wcp-mobile="true"
+                                   data-wcp-live="false"
+                                   data-wcp-sliders="w"
+                                   data-wcp-hideKeyboard="true"
+                                   data-wcp-snap="true"
+                                   data-wcp-layout="block">
                         </div>
                     </div>
                 </div>
@@ -186,7 +204,7 @@
     <script src="js/wNumb.js"></script>
     <script src="js/snackbar.min.js"></script>
     <script src="js/nouislider.js"></script>
-
+    <script src="js/jquery.wheelcolorpicker.js"></script>
     <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
@@ -245,6 +263,9 @@
             //Template init
             $.material.init();
 
+            //Color wheel init
+            $(function() { $('.colorpicker').wheelColorPicker({'mobile':true }); });
+            
             //Slider init
             var brightnessSlider = document.getElementById('slider-brightness');
 

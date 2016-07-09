@@ -50,9 +50,29 @@ io.on('connection', (socket) => {
     });
 
     socket.on('command', (command) => {
-        console.log(command.cmd, command.value, command.device, socket.handshake.address);
-        switch (command.cmd) {
+        
+        cmd = command.cmd;
+        val = command.value;
+        dev = command.device;
+        clt = findClient(dev)
+        
+        console.log(cmd, val, dev, socket.handshake.address);
 
+        switch (cmd) {
+
+        case "power":
+            //send brightness command here
+            if (val == "on") {
+                turnOn(clt, (data) => {
+                    console.log(data)
+                })
+            } else if (val == "off") {
+                turnOff(clt, (data) => {
+                    console.log(data)
+                })
+            }
+            console.log("Changed Power")
+            break;
         case "brightness":
             //send brightness command here
             console.log("Changed brightness")
@@ -70,34 +90,34 @@ io.on('connection', (socket) => {
 
 //== CLIENT FOR CONNECTING TO DEVICES
 
-
-//hardcode IP for now
-var devices = ['192.168.1.50','192.168.1.51','192.168.1.52']
-var client = []
+//hardcode IP for now. Should be directly from Scanner
+//var devices = ['192.168.1.50','192.168.1.51','192.168.1.52']
+var devices = ['192.168.1.50']
+var clients = []
 
 //make loop of devices to store all client instances in array
 
 for (var i in devices) {
     
     console.log(i)
-    client[i] = new net.Socket();
+    clients[i] = new net.Socket();
     
-    client[i].setEncoding("hex");
-    client[i].setKeepAlive(true, 30000);
-    client[i].ip = devices[i]
-    client[i].is_on = false
+    clients[i].setEncoding("hex");
+    clients[i].setKeepAlive(true, 30000);
+    clients[i].ip = devices[i]
+    clients[i].is_on = false
     console.log('Connecting to device (' + devices[i] + ')...');
 
-    client[i].connect(5577, devices[i]);
+    clients[i].connect(5577, devices[i]);
 
-    client[i].on('connect', function (err) {
+    clients[i].on('connect', function (err) {
         console.log('Connected to ' + this.ip + '!');
         checkState(this, (data) => {
             console.log(data)
         })
     })
 
-    client[i].on('data', (data) => {
+    clients[i].on('data', function (data) {
         console.log('RX:', data.replace(/(.{1,2})/g, '$1 '), "[" + data.length / 2 + "]");
         var res = read(data, data.length)
         var res_len = data.length / 2
@@ -110,7 +130,7 @@ for (var i in devices) {
         case 1:
             if (res[0] == 0x30) {
                 console.log("RX: Light State Changed, checking...")
-                setTimeout(checkState(client[i]), 1000)
+                checkState(this)
             } else {
                 console.lg("RX: Unknown State Changed")
             }
@@ -156,7 +176,7 @@ for (var i in devices) {
 
             if (pattern == 0x62) {
                 mode_str += " (tmp)"
-                client[i].state_str = power_str + " [" + mode_str + "]"
+                clients[i].state_str = power_str + " [" + mode_str + "]"
             }
             console.log("=================================")
             console.log("POWER:", power_str, "PTRN:", pattern.toString(16), "WW:", ww_level)
@@ -172,13 +192,20 @@ for (var i in devices) {
         //    client.destroy(); // kill client after server's response
     });
 
-    client[i].on('error', (err) => {
+    clients[i].on('error', (err) => {
         console.log('Error', err);
     });
-    client[i].on('close', function () {
+    clients[i].on('close', function () {
         console.log('Connection closed',this.ip);
     });
     
+}
+
+//search clients array using lodash
+function findClient(ip) {
+    index = _.findIndex(clients, ['ip', ip]);
+    console.log(index)
+    return clients[index]
 }
 
 

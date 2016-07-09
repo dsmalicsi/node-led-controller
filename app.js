@@ -175,7 +175,7 @@ for (var i in devices) {
     client[i].on('error', (err) => {
         console.log('Error', err);
     });
-    client[i].on('close', () => {
+    client[i].on('close', function () {
         console.log('Connection closed',this.ip);
     });
     

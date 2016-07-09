@@ -47,6 +47,11 @@ io.on('connection', (socket) => {
     socket.on('disconnect', () => {
         console.log('User disconnected', socket.handshake.address);
  
+    }); 
+    
+    socket.on('command', (command) => {
+        console.log(command.cmd, command.value, command.device, socket.handshake.address);
+ 
     });
     
 });

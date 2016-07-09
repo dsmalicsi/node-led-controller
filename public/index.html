@@ -113,9 +113,6 @@
 
             </div>
 
-
-
-
         </div>
 
     </div>
@@ -125,33 +122,6 @@
 
     <script src="js/jquery-1.10.2.min.js"></script>
     <script src="js/bootstrap.min.js"></script>
-
-
-    <script>
-        $(document).ready(function () {
-
-            //Power button event. TODO: Make dynamic.
-            $('#btn-power').on("click", function () {
-                console.log($(this).find("#btn-power-value").is(":checked"))
-                if ($(this).find("#btn-power-value").is(":checked")) {
-                    console.log("Is On, will turn off")
-                    $(this).trigger("focusout")
-                    $(this).find("#btn-power-value").prop('checked', false);
-                    $(this).removeClass("btn-on")
-                    $(this).addClass("btn-off")
-                } else {
-                    console.log("Is off, will turn on")
-                    $(this).trigger("focusout")
-                    $(this).find("#btn-power-value").prop('checked', true);
-                    $(this).removeClass("btn-off")
-                    $(this).addClass("btn-on")
-                        //Disable brigthness dimmer and other controls.
-                }
-            })
-
-
-        });
-    </script>
 
     <script>
         (function () {
@@ -205,10 +175,12 @@
 
         })();
     </script>
+    
     <script src="js/ripples.min.js"></script>
     <script src="js/material.min.js"></script>
     <script src="js/wNumb.js"></script>
     <script src="js/snackbar.min.js"></script>
+    <script src="js/nouislider.js"></script>
 
     <script>
         var snackBarOptions = {
@@ -216,25 +188,74 @@
             timeout: 5000,
             htmlAllowed: true,
             onClose: function () {} // callback
-        }
-    </script>
-
-
-    <script src="js/nouislider.js"></script>
-
-    <script>
+        };
+        
+        //Number formatter
+        var decimalFormat = wNumb({
+            decimals: 0
+        });
+        
+        //Ranges
+        var brightnessRange = {
+                    'min': 5,
+                    'max': 100
+                };
+         
+         
+        //Document.ready
         $(function () {
+            
+            //Template init
             $.material.init();
+         
+            //Slider init
             var brightnessSlider = document.getElementById('slider-brightness');
 
             noUiSlider.create(brightnessSlider, {
+                animate: true,
+	            animationDuration: 300,
                 start: 5,
+                step: 1,
                 connect: 'lower',
-                range: {
-                    'min': 5,
-                    'max': 100
-                }
+                range: brightnessRange,
+                format: decimalFormat
             });
+            
+            //Dimmer brightness event. TODO: Make dynamic also
+            brightnessSlider.noUiSlider.on('update', function () {
+                value = brightnessSlider.noUiSlider.get();
+                $("span#level-brightness").html(value)
+                //Send socket here
+                
+            });
+            
+               
+            //Power button event. TODO: Make dynamic.
+            $('#btn-power').on("click", function () {
+                console.log($(this).find("#btn-power-value").is(":checked"))
+                if ($(this).find("#btn-power-value").is(":checked")) {
+                    console.log("Is On, will turn off")
+                    $(this).trigger("focusout")
+                    $(this).find("#btn-power-value").prop('checked', false);
+                    $(this).removeClass("btn-on")
+                    $(this).addClass("btn-off")
+                    brightnessSlider.setAttribute('disabled', true);
+                    brightnessSlider.noUiSlider.set(0)
+                } else {
+                    console.log("Is off, will turn on")
+                    $(this).trigger("focusout")
+                    $(this).find("#btn-power-value").prop('checked', true);
+                    $(this).removeClass("btn-off")
+                    $(this).addClass("btn-on")
+                    brightnessSlider.removeAttribute('disabled');
+                    brightnessSlider.noUiSlider.set(60);
+                        //Disable brigthness dimmer and other controls.
+                }
+            })
+            
+
+
+
             //             
             //            $(".shor").noUiSlider({
             //                start: 0,
@@ -258,10 +279,7 @@
         });
     </script>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        var socket = io();
-    </script>
+    
 </body>
 
 </html>

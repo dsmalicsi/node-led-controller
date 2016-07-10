@@ -99,6 +99,17 @@ io.on('connection', (socket) => {
             
             console.log("Changed brightness")
             break;
+        case "rgb":
+            //send rgb command here
+           
+            var rgbarr =/([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})/g.exec(val)
+            r = rgbarr[1]
+            g = rgbarr[2]
+            b = rgbarr[3]
+            changeRgb(clt, r, g, b)
+            
+            console.log("Changed RGB")
+            break;
         default:
             console.log("Invalid command")
             break;

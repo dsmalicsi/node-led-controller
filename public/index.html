@@ -61,6 +61,7 @@
             font-size: 22px !important;
             vertical-align: bottom;
         }
+        
         .jQWCP-wWidget.jQWCP-block {
             border: 0px;
             background: 0px;
@@ -120,16 +121,10 @@
                             <label>Brightness: <span id="level-brightness">5</span>%</label>
                             <div id="slider-brightness" class="slider slider-info shor" style=""></div>
                         </div>
-                        
+
                         <div id="control-rgb" class="col-xs-12 col-sm-12 col-md-4">
-                            <label>Color: </label><br>
-                            <input id="control-rgb-input" type="text" data-wheelcolorpicker=""
-                                   data-wcp-mobile="true"
-                                   data-wcp-live="false"
-                                   data-wcp-sliders="w"
-                                   data-wcp-hideKeyboard="true"
-                                   data-wcp-snap="true"
-                                   data-wcp-layout="block">
+
+                            <input id="control-rgb-input" type="text" data-wheelcolorpicker="" data-wcp-mobile="true" data-wcp-mobileWidth="500" data-wcp-live="false" data-wcp-sliders="w" data-wcp-hideKeyboard="true" data-wcp-snap="true" data-wcp-layout="block">
                         </div>
                     </div>
                 </div>
@@ -264,8 +259,12 @@
             $.material.init();
 
             //Color wheel init
-            $(function() { $('.colorpicker').wheelColorPicker({'mobile':true }); });
-            
+            $(function () {
+                $('.colorpicker').wheelColorPicker({
+                    'mobile': true
+                });
+            });
+
             //Slider init
             var brightnessSlider = document.getElementById('slider-brightness');
 
@@ -315,6 +314,55 @@
                 });
             });
 
+            $('#control-rgb-input').on('sliderup', function () {
+
+                console.log("hold")
+                socket.emit('hold', {
+                    'value': false,
+                    'device': '192.168.1.50'
+                }, function (data) {
+                    console.log(data);
+                });
+            });
+            $('#control-rgb-input').on('sliderdown', function () {
+                console.log("hold")
+
+                socket.emit('hold', {
+                    'value': true,
+                    'device': '192.168.1.50'
+                }, function (data) {
+                    console.log(data);
+                });
+            });
+            $('#control-rgb-input').on('focus', function () {
+                console.log("focus")
+
+                // console.log($(this).wheelColorPicker('getValue', 'rgb'))
+            });
+            $('#control-rgb-input').on('blur', function () {
+                console.log("blur")
+                    //  console.log($(this).wheelColorPicker('getValue', 'rgb'))
+            });
+            $('#control-rgb-input').on('change', function () {
+
+                console.log($(this).wheelColorPicker('getValue', 'rgb'))
+
+            });
+            $('#control-rgb-input').on('slidermove', function () {
+                console.log($(this).wheelColorPicker('getValue', 'rgb'))
+                value = $(this).wheelColorPicker('getValue', 'rgb');
+                console.log("send rgb")
+
+                socket.emit('command', {
+                    'cmd': 'rgb',
+                    'value': value,
+                    'device': '192.168.1.50'
+
+                }, function (data) {
+                    console.log(data);
+                });
+                //                $('#event-color').val($(this).wheelColorPicker('getValue', 'rgb'));
+            });
 
             //Power button event. TODO: Make dynamic.
             $('#btn-power').on("click", function () {
@@ -334,11 +382,11 @@
                     }, function (data) {
                         console.log(data);
                     });
-                    
+
                     //Disable brightness dimmer and other controls.
                     brightnessSlider.setAttribute('disabled', true);
                     brightnessSlider.noUiSlider.set(0)
-                    
+
                 } else {
                     console.log("Is off, will turn on")
                     $(this).trigger("focusout")
@@ -358,7 +406,7 @@
                     //Disable brightness dimmer and other controls.
                     brightnessSlider.removeAttribute('disabled');
                     brightnessSlider.noUiSlider.set(100);
-                    
+
                 }
             })
 

@@ -250,6 +250,19 @@
             'min': 5,
             'max': 100
         };
+        
+        //throttle function for limiting event calls
+        //prevents packet spam 
+        function throttle(func, interval) {
+            var lastCall = 0;
+            return function() {
+                var now = Date.now();
+                if (lastCall + interval < now) {
+                    lastCall = now;
+                    return func.apply(this, arguments);
+                }
+            };
+        }
 
 
         //Document.ready
@@ -348,7 +361,7 @@
                 console.log($(this).wheelColorPicker('getValue', 'rgb'))
 
             });
-            $('#control-rgb-input').on('slidermove', function () {
+            $('#control-rgb-input').on('slidermove', throttle(function () {
                 console.log($(this).wheelColorPicker('getValue', 'rgb'))
                 value = $(this).wheelColorPicker('getValue', 'rgb');
                 console.log("send rgb")
@@ -362,7 +375,7 @@
                     console.log(data);
                 });
                 //                $('#event-color').val($(this).wheelColorPicker('getValue', 'rgb'));
-            });
+            },50));
 
             //Power button event. TODO: Make dynamic.
             $('#btn-power').on("click", function () {

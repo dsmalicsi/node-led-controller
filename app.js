@@ -136,7 +136,7 @@ for (var i in devices) {
     clients[i] = new net.Socket();
     
     clients[i].setEncoding("hex");
-    clients[i].setKeepAlive(true, 30000);
+    clients[i].setKeepAlive(true, 5000);
     clients[i].ip = devices[i]
     clients[i].is_on = false
     clients[i].hold = false
@@ -146,13 +146,14 @@ for (var i in devices) {
 
     clients[i].on('connect', function (err) {
         console.log('Connected to ' + this.ip + '!');
-        checkState(this, (data) => {
-            console.log(data)
-        })
+        
+        checkState(this, null)
+        setInterval(() => {checkState(this, null)}, 10000)
+        
     })
 
     clients[i].on('data', function (data) {
-        console.log('RX:', data.replace(/(.{1,2})/g, '$1 '), "[" + data.length / 2 + "]");
+        //console.log('RX:', data.replace(/(.{1,2})/g, '$1 '), "[" + data.length / 2 + "]");
         var res = read(data, data.length)
         var res_len = data.length / 2
 
@@ -255,9 +256,11 @@ function checkState(client, callback) {
     var msg = [0x81, 0x8a, 0x8b];
     send(client, msg, (data) => {
 
-        callback = null;
+       callback = data;
 
     })
+    
+    return true;
 }
 
 function turnOn(client, callback) {
@@ -308,7 +311,7 @@ function read(response, pkt_length) {
 function send(client, msg, callback) {
     var crc = sum(msg)
     msg.push(crc)
-    console.log("TX:", msg, "0x" + crc.toString(16).replace(/^[0-9]/g, ''))
+    //console.log("TX:", msg, "0x" + crc.toString(16).replace(/^[0-9]/g, ''))
     client.write(new Buffer(msg), (err, data) => {
 
         if (!err) {

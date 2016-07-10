@@ -299,6 +299,8 @@
                 }
             };
         }
+        
+        var hold = false;
 
         var socket = io();
         
@@ -378,6 +380,7 @@
             //Prevent the client from auto-refreshing state 
             //while sliding to reduce spam
             brightnessSlider.noUiSlider.on('start', function () {
+                hold = true;
                 socket.emit('hold', {
                     'value': true,
                     'device': '192.168.1.50'
@@ -388,6 +391,7 @@
 
             //Resume the client auto-refreshing state after sliding
             brightnessSlider.noUiSlider.on('end', function () {
+                hold = false;
                 socket.emit('hold', {
                     'value': false,
                     'device': '192.168.1.50'
@@ -397,8 +401,7 @@
             });
 
             $('#control-rgb-input').on('sliderup', throttle(function () {
-
-                console.log("hold off")
+                hold = false;
                 socket.emit('hold', {
                     'value': false,
                     'device': '192.168.1.50'
@@ -408,8 +411,7 @@
             },50));
             
             $('#control-rgb-input').on('sliderdown', function () {
-                console.log("hold on")
-
+                hold = true;
                 socket.emit('hold', {
                     'value': true,
                     'device': '192.168.1.50'

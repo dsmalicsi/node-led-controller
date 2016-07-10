@@ -365,11 +365,18 @@
             //Dimmer brightness event. TODO: Make dynamic also
             brightnessSlider.noUiSlider.on('slide', function () {
                 value = brightnessSlider.noUiSlider.get();
-                $("span#level-brightness").html(value)
+                $("#state-bright").val(value);
+                $("#level-brightness").html(value);
+                
+                rgb = calcRgbBrightness(value, $("#control-rgb-input").wheelColorPicker('getValue', 'rgb'));
+                
+                console.log(value, rgb)
+//                console.log(calcBrightness(value, $("#state-red").val()),calcBrightness(value, $("#state-green").val()),calcBrightness(value, $("#state-blue").val()))
+//                console.log(r,g,b)
                     //Send socket here
                 socket.emit('command', {
                     'cmd': 'brightness',
-                    'value': value,
+                    'value': rgb,
                     'device': '192.168.1.50'
 
                 }, function (data) {
@@ -531,6 +538,14 @@
                 brightnessSlider.noUiSlider.set(0)
         }
         
+        function calcPercentage(value) {
+            if (value > 255) value = 255
+            if (value < 15) value = 15
+            
+            //returns 0 - 100
+            return Math.round(parseInt((value * 100)/255))
+        }
+        
         //get Brightness Value from RGB
         function getBrightness(r,g,b) {
             if (r >= g && r >= b) {
@@ -542,12 +557,38 @@
             } else if (r == g && r == b) {
                 max = r
             }
+            
             if (max > 255) max = 255
             if (max < 15) max = 15
             
             //returns 0 - 100
             return Math.round(parseInt((max * 100)/255))
         }
+        
+        //calculate Brightness value
+        function calcRgbBrightness(value, rgb) {
+            if (value > 100)
+                value = 100
+            if (value < 0)
+                value = 0
+                
+            var rgbarr =/([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})/g.exec(rgb)
+            r = rgbarr[1]
+            g = rgbarr[2]
+            b = rgbarr[3]    
+            
+            console.log(r, g, b, "|", r*value, g*value, b*value)
+                
+            //returns 0 - 255
+            r = parseInt((r * value)/(100))
+            g = parseInt((g * value)/(100))
+            b = parseInt((b * value)/(100))
+            
+            return {r:r,g:g,b:b}
+        }
+    
+
+        
         socket.on('state', (data) => {
             console.log(data);
             $("#192_168_1_50").find("#state-power").val(data.power)

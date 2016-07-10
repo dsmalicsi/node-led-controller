@@ -41,7 +41,7 @@ exports.byteToPercent = (value) => {
         value = 255
     if (value < 0)
         value = 0
-    return parseInt((value * 100)/255)
+    return Math.round(parseInt((value * 100)/255))
 }
 
 exports.percentToByte = (value) => {
@@ -49,5 +49,5 @@ exports.percentToByte = (value) => {
         value = 100
     if (value < 0)
         value = 0
-    return parseInt((value * 255)/100)
+    return Math.round(parseInt((value * 255)/100))
 }

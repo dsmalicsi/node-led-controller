@@ -97,13 +97,14 @@ io.on('connection', (socket) => {
             break;
         case "brightness":
             //send brightness command here
-            r = utils.percentToByte(val)
-            g = utils.percentToByte(val)
-            b = utils.percentToByte(val)
+      
+            r = val.r
+            g = val.g
+            b = val.b
 
             changeRgb(clt, r, g, b)
             
-            console.log("Changed brightness",val,"%")
+            console.log("Changed brightness",r,g,b,"%")
             break;
         case "rgb":
             //send rgb command here

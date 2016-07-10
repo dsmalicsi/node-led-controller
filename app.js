@@ -49,6 +49,13 @@ io.on('connection', (socket) => {
         console.log('User disconnected', socket.handshake.address);
 
     });
+    
+    socket.on('check-state', (data) => {
+        console.log('check socket')
+        clt = findClient(data.device);
+        checkState(clt, null)
+
+    })
 
     socket.on('hold', (command) => {
         
@@ -148,7 +155,7 @@ for (var i in devices) {
         console.log('Connected to ' + this.ip + '!');
         
         checkState(this, null)
-        setInterval(() => {checkState(this, null)}, 10000)
+        setInterval(() => {checkState(this, null)}, 30000)
         
     })
 
@@ -193,7 +200,8 @@ for (var i in devices) {
             }
 
             pattern = res[3]
-            ww_level = res[9]
+            ww = res[9]
+            ww_level = utils.byteToPercent(ww)
             mode = utils.checkMode(ww_level, pattern)
             delay = res[5]
             speed = utils.calcSpeed(delay)
@@ -207,7 +215,7 @@ for (var i in devices) {
                     //			color_str
                 mode_str = "Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
             } else if (mode == "ww") {
-                mode_str = "Warm White: " + utils.byteToPercent(ww_level) + "%"
+                mode_str = "Warm White: " + ww_level + "%"
             } else if (mode == "preset") {
                 pattern_str = patterns.getPatternName(pattern)
                 mode_str = pattern_str + " (Speed " + speed + "%)"
@@ -221,6 +229,23 @@ for (var i in devices) {
                 mode_str += " (tmp)"
                 clients[i].state_str = power_str + " [" + mode_str + "]"
             }
+               
+                io.emit('state',
+                       {    'device':this.ip,
+                            'power':power_str,
+                            'pattern':pattern.toString(16),
+                            'mode': mode,
+                            'mode_str': mode_str,
+                            'ww_level': ww_level,
+                            'delay': delay,
+                            'speed':speed,
+                            'r':red,
+                            'g':green,
+                            'b':blue,
+                            'ww':ww
+                       }
+                )
+                
             console.log("=================================")
             console.log("POWER:", power_str, "PTRN:", pattern.toString(16), "WW:", ww_level)
             console.log("MODE:", mode_str)

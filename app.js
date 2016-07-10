@@ -58,7 +58,7 @@ io.on('connection', (socket) => {
         clt = findClient(dev);
         clt.hold = val;
         
-        if (val) {
+        if (!val) {
             sleep.usleep(70000)
             checkState(clt)
         }
@@ -72,7 +72,7 @@ io.on('connection', (socket) => {
         dev = command.device;
         clt = findClient(dev);
 
-        console.log(cmd, val, dev, socket.handshake.address);
+        //console.log(cmd, val, dev, socket.handshake.address);
 
         switch (cmd) {
 
@@ -93,11 +93,10 @@ io.on('connection', (socket) => {
             r = utils.percentToByte(val)
             g = utils.percentToByte(val)
             b = utils.percentToByte(val)
-            console.log(r, g, b)
 
             changeRgb(clt, r, g, b)
             
-            console.log("Changed brightness")
+            console.log("Changed brightness",val,"%")
             break;
         case "rgb":
             //send rgb command here
@@ -106,9 +105,10 @@ io.on('connection', (socket) => {
             r = rgbarr[1]
             g = rgbarr[2]
             b = rgbarr[3]
+            
             changeRgb(clt, r, g, b)
             
-            console.log("Changed RGB")
+            console.log("Changed RGB", r, g, b)
             break;
         default:
             console.log("Invalid command")
@@ -170,7 +170,7 @@ for (var i in devices) {
                     checkState(this)
                 }
                 else {
-                    console.log("RX: Skip Check State")
+                    //console.log("RX: Skip Check State")
                 }
 
             } else {
@@ -247,7 +247,6 @@ for (var i in devices) {
 //search clients array using lodash
 function findClient(ip) {
     index = _.findIndex(clients, ['ip', ip]);
-    console.log(index)
     return clients[index]
 }
 
@@ -293,7 +292,7 @@ function changeRgb(client, r, g, b) {
     var msg = [0x31, r, g, b, 0x00, 0xf0, 0x0f]
 
     send(client, msg, (data) => {
-        console.log(data)
+        //console.log(data)
     })
 }
 

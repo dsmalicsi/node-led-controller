@@ -327,18 +327,19 @@
                 });
             });
 
-            $('#control-rgb-input').on('sliderup', function () {
+            $('#control-rgb-input').on('sliderup', throttle(function () {
 
-                console.log("hold")
+                console.log("hold off")
                 socket.emit('hold', {
                     'value': false,
                     'device': '192.168.1.50'
                 }, function (data) {
                     console.log(data);
                 });
-            });
+            },50));
+            
             $('#control-rgb-input').on('sliderdown', function () {
-                console.log("hold")
+                console.log("hold on")
 
                 socket.emit('hold', {
                     'value': true,

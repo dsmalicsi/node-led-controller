@@ -51,7 +51,6 @@ io.on('connection', (socket) => {
     });
     
     socket.on('check-state', (data) => {
-        console.log('check socket')
         clt = findClient(data.device);
         checkState(clt, null)
 
@@ -187,7 +186,7 @@ for (var i in devices) {
 
             break;
         case 14: //Check State
-            console.log("OP: Check State")
+            console.log("== OP: Check State ==================")
 
             power_state = res[2]
             power_str = "Unknown power state"
@@ -221,7 +220,7 @@ for (var i in devices) {
             } else if (mode == "ww") {
                 mode_str = "Warm White: " + ww_level + "%"
             } else if (mode == "preset") {
-                mode_str = pattern_str + " Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
+                mode_str = pattern_str 
             } else if (mode == "custom") {
                 mode_str = "Custom pattern (Speed " + speed + "%)"
             } else {
@@ -251,12 +250,10 @@ for (var i in devices) {
                        }
                 )
                 
-            console.log("=================================")
             console.log("POWER:", power_str, "PTRN:", pattern.toString(16), "WW:", ww_level)
             console.log("MODE:", mode_str)
-            console.log("RGB:", red, green, blue)
-            console.log("DELAY:", delay, "SPEED:", speed)
-            console.log("=================================")
+            console.log("RGB:", red, green, blue, "DELAY:", delay, "SPEED:", speed)
+            console.log("=====================================")
             break;
         default:
             console.log(res)

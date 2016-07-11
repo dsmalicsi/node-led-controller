@@ -327,7 +327,7 @@
         }
 
         var hold = false;
-
+        var refresher = {};
         var socket = io();
 
         socket.on('connect', () => {
@@ -375,7 +375,37 @@
             socket.emit('check-state', {
                 'device': '192.168.1.50'
             })
-            setInterval(() => {
+            
+            //socket refresher to get updated device values
+            
+            refresher = {
+                running: false,
+                iv: 1000,
+                timeout: false,
+                cb : function(){},
+                start : function(cb,iv){
+                    var elm = this;
+                    clearInterval(this.timeout);
+                    this.running = true;
+                    if(cb) this.cb = cb;
+                    if(iv) this.iv = iv;
+                    this.timeout = setTimeout(function(){elm.execute(elm)}, this.iv);
+                },
+                execute : function(e){
+                    if(!e.running) return false;
+                    e.cb();
+                    e.start();
+                },
+                stop : function(){
+                    this.running = false;
+                },
+                set_interval : function(iv){
+                    clearInterval(this.timeout);
+                    this.start(false, iv);
+                }
+            };
+            
+            refresher.start(() => {
                 if (!hold) socket.emit('check-state', {
                     'device': '192.168.1.50'
                 })
@@ -643,6 +673,13 @@
             $("#192_168_1_50").find(".btn-pattern#" + data.pattern_id).addClass("btn-info")
             $("#192_168_1_50").find("#state-delay").val(data.delay)
             $("#192_168_1_50").find("#state-speed").val(data.speed)
+            
+            if (data.pattern_id == "color") {
+                refresher.set_interval(5000);
+                console.log("color")
+            } else {
+                refresher.set_interval(500);
+            }
 
             if (data.power == "ON") {
                 turnOn($('#192_168_1_50').find("#btn-power-value"), $('#192_168_1_50').find("#slider-brightness")[0])

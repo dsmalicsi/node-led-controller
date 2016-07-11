@@ -216,7 +216,7 @@ for (var i in devices) {
                 green = res[7]
                 blue = res[8]
                     //			color_str
-                mode_str = "Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
+                mode_str = "Single Color"
             } else if (mode == "ww") {
                 mode_str = "Warm White: " + ww_level + "%"
             } else if (mode == "preset") {
@@ -250,7 +250,7 @@ for (var i in devices) {
                        }
                 )
                 
-            console.log("POWER:", power_str, "PTRN:", pattern.toString(16), "WW:", ww_level)
+            console.log("POWER:", power_str, "PATTERN:", "0x"+pattern.toString(16), "WW_LEVEL:", ww_level)
             console.log("MODE:", mode_str)
             console.log("RGB:", red, green, blue, "DELAY:", delay, "SPEED:", speed)
             console.log("=====================================")

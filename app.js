@@ -207,7 +207,9 @@ for (var i in devices) {
             delay = res[5]
             speed = utils.calcSpeed(delay)
 
-            //		
+            red = res[6]
+            green = res[7]
+            blue = res[8]
 
             if (mode == "color") {
                 red = res[6]
@@ -218,12 +220,12 @@ for (var i in devices) {
             } else if (mode == "ww") {
                 mode_str = "Warm White: " + ww_level + "%"
             } else if (mode == "preset") {
-                pattern_str = patterns.getPatternName(pattern)
-                mode_str = pattern_str + " (Speed " + speed + "%)"
+                pattern_str = patterns.getPatternName(pattern).string_name
+                mode_str = pattern_str + " (Speed " + speed + "%)" + "Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
             } else if (mode == "custom") {
                 mode_str = "Custom pattern (Speed " + speed + "%)"
             } else {
-                mode_str = "Unknown mode 0x" ///
+                mode_str = "Unknown mode 0x"+pattern ///
             }
 
             if (pattern == 0x62) {

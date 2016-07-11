@@ -29,13 +29,16 @@ var patternNames = {
 
 exports.validPresetPattern = (pattern) => {
     if (pattern < 0x25 || pattern > 0x38)
-        false
+        return false
     else
-        true
+        return true
 }
 
 exports.getPatternName = (pattern) => {
 
-    patternNames[pattern].replace(/_/g, " ").toLowerCase().replace(/\b\w/g, (txt) => { txt.toUpperCase(); })
+    string_id = patternNames[pattern]
+    string_name = patternNames[pattern].replace(/_/g, " ").toLowerCase().replace(/\b\w/g, function (txt) { return txt.toUpperCase(); })
+
+    return {string_id:string_id, string_name:string_name}
 
 }

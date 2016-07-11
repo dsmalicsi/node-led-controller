@@ -18,7 +18,6 @@ exports.checkMode = (ww_level, pattern) => {
         mode = "custom"
     else if (patterns.validPresetPattern(pattern))
         mode = "preset"
-        
     return mode
 }
 

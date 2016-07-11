@@ -131,9 +131,9 @@
 
                             <input id="control-rgb-input" type="text" data-wheelcolorpicker="" data-wcp-mobile="true" data-wcp-mobileWidth="500" data-wcp-live="false" data-wcp-sliders="w" data-wcp-hideKeyboard="true" data-wcp-snap="true" data-wcp-layout="block">
                         </div>
-                        
+
                         <div id="control-modes" class="col-xs-12 col-sm-12 col-md-12">
-                         
+
                             <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="seven_color_cross_fade">seven_color_cross_fade</a>
                             <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="red_gradual_change">red_gradual_change</a>
                             <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="green_gradual_change">green_gradual_change</a>
@@ -156,67 +156,67 @@
                             <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="seven_color_jumping">seven_color_jumpin</a>
                             
                         </div>
-                        
+
                         <div id="debug" class="col-xs-12">
-                            
-                        
+
+
                             <form class="form-inline">
-                                
+
                                 <div class="form-group">
                                     <label class="control-label" for="state-power">Power</label>
-                                    <input type="text" class="form-control" id="state-power" size="8"/>
+                                    <input type="text" class="form-control" id="state-power" size="8" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-red">R</label>
-                                    <input type="text" class="form-control" id="state-red" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-red" size="8" />
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-green">G</label>
-                                    <input type="text" class="form-control" id="state-green" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-green" size="8" />
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-blue">B</label>
-                                    <input type="text" class="form-control" id="state-blue" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-blue" size="8" />
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-bright">Brightness</label>
-                                    <input type="text" class="form-control" id="state-bright" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-bright" size="8" />
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-color">Color</label>
-                                    <input type="text" class="form-control" id="state-color" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-color" size="8" />
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-ww">WW</label>
-                                    <input type="text" class="form-control" id="state-ww" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-ww" size="8" />
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-ww_level">WW %</label>
-                                    <input type="text" class="form-control" id="state-ww_level" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-ww_level" size="8" />
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-mode">Mode</label>
-                                    <input type="text" class="form-control" id="state-mode" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-mode" size="8" />
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-pattern">Pattern</label>
-                                    <input type="text" class="form-control" id="state-pattern" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-pattern" size="8" />
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-delay">Delay</label>
-                                    <input type="text" class="form-control" id="state-delay" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-delay" size="8" />
+                                </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-speed">Speed</label>
-                                    <input type="text" class="form-control" id="state-speed" size="8"/>
-                                    </div>
+                                    <input type="text" class="form-control" id="state-speed" size="8" />
+                                </div>
 
-                            
+
                             </form>
-                            
-                            
+
+
                         </div>
-                        
+
                     </div>
                 </div>
 
@@ -292,7 +292,7 @@
     <script src="js/nouislider.js"></script>
     <script src="js/jquery.wheelcolorpicker.js"></script>
     <script src="/socket.io/socket.io.js"></script>
-    
+
     <script>
         var snackBarOptions = {
             content: "default message",
@@ -311,12 +311,12 @@
             'min': 5,
             'max': 100
         };
-        
+
         //throttle function for limiting event calls
         //prevents packet spam 
         function throttle(func, interval) {
             var lastCall = 0;
-            return function() {
+            return function () {
                 var now = Date.now();
                 if (lastCall + interval < now) {
                     lastCall = now;
@@ -324,18 +324,18 @@
                 }
             };
         }
-        
+
         var hold = false;
 
         var socket = io();
-        
+
         socket.on('connect', () => {
             $("#connect-ok").show()
             $("#connect-remote").hide()
             $("#connect-off").hide()
             $("#connect-warn").hide()
             console.log('Connected')
-            
+
             $.snackbar({
                 content: '<b>SOCKET:</b> Connected to node server!',
                 class: 'success',
@@ -369,10 +369,16 @@
                     'mobile': true
                 });
             });
-            
+
             //Init device values
-            socket.emit('check-state',{'device':'192.168.1.50'})
-            setInterval(() => { if (!hold) socket.emit('check-state',{'device':'192.168.1.50'})},1000)
+            socket.emit('check-state', {
+                'device': '192.168.1.50'
+            })
+            setInterval(() => {
+                if (!hold) socket.emit('check-state', {
+                    'device': '192.168.1.50'
+                })
+            }, 1000)
 
 
             //Slider init
@@ -393,12 +399,12 @@
                 value = brightnessSlider.noUiSlider.get();
                 $("#state-bright").val(value);
                 $("#level-brightness").html(value);
-                
+
                 rgb = calcRgbBrightness(value, $("#control-rgb-input").wheelColorPicker('getValue', 'rgb'));
-                
+
                 console.log(value, rgb)
-//                console.log(calcBrightness(value, $("#state-red").val()),calcBrightness(value, $("#state-green").val()),calcBrightness(value, $("#state-blue").val()))
-//                console.log(r,g,b)
+                    //                console.log(calcBrightness(value, $("#state-red").val()),calcBrightness(value, $("#state-green").val()),calcBrightness(value, $("#state-blue").val()))
+                    //                console.log(r,g,b)
                     //Send socket here
                 socket.emit('command', {
                     'cmd': 'brightness',
@@ -441,8 +447,8 @@
                 }, function (data) {
                     console.log(data);
                 });
-            },50));
-            
+            }, 50));
+
             $('#control-rgb-input').on('sliderdown', function () {
                 hold = true;
                 socket.emit('hold', {
@@ -480,16 +486,16 @@
                     console.log(data);
                 });
                 //                $('#event-color').val($(this).wheelColorPicker('getValue', 'rgb'));
-            },50));
+            }, 50));
 
             //Power button event. TODO: Make dynamic.
             $('#btn-power').on("click", function () {
                 console.log($(this).find("#btn-power-value").is(":checked"))
                 if ($(this).find("#btn-power-value").is(":checked")) {
                     console.log("Is On, will turn off")
-                    
+
                     turnOff(this, brightnessSlider)
-                    
+
                     socket.emit('command', {
                         'cmd': 'power',
                         'value': 'off',
@@ -498,7 +504,7 @@
                     }, function (data) {
                         console.log(data);
                     });
-                    
+
                 } else {
                     console.log("Is off, will turn on")
                     turnOn(this, brightnessSlider)
@@ -510,10 +516,10 @@
                     }, function (data) {
                         console.log(data);
                     });
-                    
+
                 }
             })
-             
+
             //             
             //            $(".shor").noUiSlider({
             //                start: 0,
@@ -535,113 +541,114 @@
             //                }
             //            });
         });
-        
-         //UI function when device is On
-        function turnOn(target, brightnessSlider){
-                $(target).trigger("focusout")
-                $(target).find("#btn-power-value").prop('checked', true);
-                $(target).removeClass("btn-off")
-                $(target).addClass("btn-on")
-                
-                
-                parent = $(target).parentsUntil("device-container")
-                console.log($(parent).find("#state-bright").val())
-                
-                //Enable brightness dimmer and other controls.
-                brightnessSlider.removeAttribute('disabled');
-                brightnessSlider.noUiSlider.set($(parent).find("#state-bright").val());
+
+        //UI function when device is On
+        function turnOn(target, brightnessSlider) {
+            $(target).trigger("focusout")
+            $(target).find("#btn-power-value").prop('checked', true);
+            $(target).removeClass("btn-off")
+            $(target).addClass("btn-on")
+
+
+            parent = $(target).parentsUntil("device-container")
+            console.log($(parent).find("#state-bright").val())
+
+            //Enable brightness dimmer and other controls.
+            brightnessSlider.removeAttribute('disabled');
+            brightnessSlider.noUiSlider.set($(parent).find("#state-bright").val());
         }
 
 
         //UI function when device is Off
-        function turnOff(target, brightnessSlider){
-                $(target).trigger("focusout")
-                $(target).find("#btn-power-value").prop('checked', false);
-                $(target).removeClass("btn-on")
-                $(target).addClass("btn-off")
+        function turnOff(target, brightnessSlider) {
+            $(target).trigger("focusout")
+            $(target).find("#btn-power-value").prop('checked', false);
+            $(target).removeClass("btn-on")
+            $(target).addClass("btn-off")
                 //Disable brightness dimmer and other controls.
-                brightnessSlider.setAttribute('disabled', true);
-                brightnessSlider.noUiSlider.set(0)
+            brightnessSlider.setAttribute('disabled', true);
+            brightnessSlider.noUiSlider.set(0)
         }
-        
+
         function calcPercentage(value) {
             if (value > 255) value = 255
             if (value < 15) value = 15
-            
+
             //returns 0 - 100
-            return Math.round(parseInt((value * 100)/255))
+            return Math.round(parseInt((value * 100) / 255))
         }
-        
+
         //get Brightness Value from RGB
-        function getBrightness(r,g,b) {
+        function getBrightness(r, g, b) {
             if (r >= g && r >= b) {
                 max = r
-            } else if ( g >= r && g >= b) {
+            } else if (g >= r && g >= b) {
                 max = g
             } else if (b >= r && b >= g) {
                 max = b
             } else if (r == g && r == b) {
                 max = r
             }
-            
+
             if (max > 255) max = 255
             if (max < 15) max = 15
-            
+
             //returns 0 - 100
-            return Math.round(parseInt((max * 100)/255))
+            return Math.round(parseInt((max * 100) / 255))
         }
-        
+
         //calculate Brightness value
         function calcRgbBrightness(value, rgb) {
             if (value > 100)
                 value = 100
             if (value < 0)
                 value = 0
-                
-            var rgbarr =/([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})/g.exec(rgb)
+
+            var rgbarr = /([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})/g.exec(rgb)
             r = rgbarr[1]
             g = rgbarr[2]
-            b = rgbarr[3]    
-            
-            console.log(r, g, b, "|", r*value, g*value, b*value)
-                
-            //returns 0 - 255
-            r = parseInt((r * value)/(100))
-            g = parseInt((g * value)/(100))
-            b = parseInt((b * value)/(100))
-            
-            return {r:r,g:g,b:b}
-        }
-    
+            b = rgbarr[3]
 
-        
+            console.log(r, g, b, "|", r * value, g * value, b * value)
+
+            //returns 0 - 255
+            r = parseInt((r * value) / (100))
+            g = parseInt((g * value) / (100))
+            b = parseInt((b * value) / (100))
+
+            return {
+                r: r,
+                g: g,
+                b: b
+            }
+        }
+
+
+
         socket.on('state', (data) => {
             console.log(data);
             $("#192_168_1_50").find("#state-power").val(data.power)
             $("#192_168_1_50").find("#state-red").val(data.r)
             $("#192_168_1_50").find("#state-green").val(data.g)
             $("#192_168_1_50").find("#state-blue").val(data.b)
-            $("#192_168_1_50").find("#state-bright").val(getBrightness(data.r,data.g,data.b))
-            $("#192_168_1_50").find("#level-brightness").html(getBrightness(data.r,data.g,data.b))
-            $("#192_168_1_50").find("#state-color").val("#"+data.r.toString(16)+data.g.toString(16)+data.b.toString(16))
+            $("#192_168_1_50").find("#state-bright").val(getBrightness(data.r, data.g, data.b))
+            $("#192_168_1_50").find("#level-brightness").html(getBrightness(data.r, data.g, data.b))
+            $("#192_168_1_50").find("#state-color").val("#" + data.r.toString(16) + data.g.toString(16) + data.b.toString(16))
             $("#192_168_1_50").find("#state-ww").val(data.ww)
             $("#192_168_1_50").find("#state-ww_level").val(data.ww_level)
             $("#192_168_1_50").find("#state-mode").val(data.mode)
             $("#192_168_1_50").find("#state-pattern").val(data.pattern_id)
             $("#192_168_1_50").find(".btn-pattern").removeClass("btn-info")
-            $("#192_168_1_50").find(".btn-pattern#"+data.pattern_id).addClass("btn-info")
+            $("#192_168_1_50").find(".btn-pattern#" + data.pattern_id).addClass("btn-info")
             $("#192_168_1_50").find("#state-delay").val(data.delay)
             $("#192_168_1_50").find("#state-speed").val(data.speed)
-            
-            if(data.power == "ON") {
+
+            if (data.power == "ON") {
                 turnOn($('#192_168_1_50').find("#btn-power-value"), $('#192_168_1_50').find("#slider-brightness")[0])
             } else {
-            turnOff($('#192_168_1_50').find("#btn-power-value"), $('#192_168_1_50').find("#slider-brightness")[0])
+                turnOff($('#192_168_1_50').find("#btn-power-value"), $('#192_168_1_50').find("#slider-brightness")[0])
             }
         })
-        
-        
-      
     </script>
 
 

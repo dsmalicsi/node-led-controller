@@ -13,8 +13,7 @@ exports.checkMode = (ww_level, pattern) => {
             mode = "ww"
         else
             mode = "color"
-    }   
-    else if (pattern == 0x60)
+    } else if (pattern == 0x60)
         mode = "custom"
     else if (patterns.validPresetPattern(pattern))
         mode = "preset"
@@ -23,24 +22,24 @@ exports.checkMode = (ww_level, pattern) => {
 
 exports.calcSpeed = (delay) => {
     delay = delay - 1;
-    if (delay > (max_delay - 1) ) {
+    if (delay > (max_delay - 1)) {
         delay = max_delay - 1
-    } 
+    }
     if (delay < 0) {
         delay = 0
     }
-    inv_speed = parseInt((delay * 100)/(max_delay)-1)
+    inv_speed = parseInt((delay * 100) / (max_delay) - 1)
     speed = 100 - inv_speed
-    
+
     return speed
 }
- 
+
 exports.byteToPercent = (value) => {
     if (value > 255)
         value = 255
     if (value < 0)
         value = 0
-    return Math.round(parseInt((value * 100)/255))
+    return Math.round(parseInt((value * 100) / 255))
 }
 
 exports.percentToByte = (value) => {
@@ -48,5 +47,5 @@ exports.percentToByte = (value) => {
         value = 100
     if (value < 0)
         value = 0
-    return Math.round(parseInt((value * 255)/100))
+    return Math.round(parseInt((value * 255) / 100))
 }

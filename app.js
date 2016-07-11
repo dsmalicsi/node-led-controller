@@ -221,7 +221,7 @@ for (var i in devices) {
             } else if (mode == "ww") {
                 mode_str = "Warm White: " + ww_level + "%"
             } else if (mode == "preset") {
-                mode_str = pattern_str + " (Speed " + speed + "%)" + "Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
+                mode_str = pattern_str + " Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
             } else if (mode == "custom") {
                 mode_str = "Custom pattern (Speed " + speed + "%)"
             } else {
@@ -254,7 +254,8 @@ for (var i in devices) {
             console.log("=================================")
             console.log("POWER:", power_str, "PTRN:", pattern.toString(16), "WW:", ww_level)
             console.log("MODE:", mode_str)
-            console.log("DELAY:", delay)
+            console.log("RGB:", red, green, blue)
+            console.log("DELAY:", delay, "SPEED:", speed)
             console.log("=================================")
             break;
         default:

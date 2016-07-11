@@ -587,6 +587,9 @@
             //Enable brightness dimmer and other controls.
             brightnessSlider.removeAttribute('disabled');
             brightnessSlider.noUiSlider.set($(parent).find("#state-bright").val());
+            $(parent).find(".btn-pattern").removeClass("disabled")
+
+
         }
 
 
@@ -596,9 +599,16 @@
             $(target).find("#btn-power-value").prop('checked', false);
             $(target).removeClass("btn-on")
             $(target).addClass("btn-off")
-                //Disable brightness dimmer and other controls.
+            
+            parent = $(target).parentsUntil("device-container")
+        
+
+            //Disable brightness dimmer and other controls.
             brightnessSlider.setAttribute('disabled', true);
             brightnessSlider.noUiSlider.set(0)
+            $(parent).find(".btn-pattern").addClass("disabled")
+
+
         }
 
         function calcPercentage(value) {
@@ -674,16 +684,19 @@
             $("#192_168_1_50").find("#state-delay").val(data.delay)
             $("#192_168_1_50").find("#state-speed").val(data.speed)
             
+            //Change refresh interval depending on pattern
             if (data.pattern_id == "color") {
                 refresher.set_interval(5000);
                 console.log("color")
-            } else {
+            } else if (data.power != "OFF"){
                 refresher.set_interval(500);
             }
 
+            //Update UI
             if (data.power == "ON") {
                 turnOn($('#192_168_1_50').find("#btn-power-value"), $('#192_168_1_50').find("#slider-brightness")[0])
             } else {
+                refresher.set_interval(60000);
                 turnOff($('#192_168_1_50').find("#btn-power-value"), $('#192_168_1_50').find("#slider-brightness")[0])
             }
         })

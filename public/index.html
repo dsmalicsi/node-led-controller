@@ -77,7 +77,7 @@
             margin-left: 5px;
         }
 */
-    </style>
+     </style>
 
 </head>
 
@@ -108,11 +108,11 @@
                         </h4>
                     </div>
                     <div class="panel-body">
-                        <div class="col-xs-3 col-sm-2 col-md-1">
+                        <div id="control-power" class="col-xs-3 col-sm-2 col-md-1">
 
 
                             <label>Power</label>
-                            <div id="control-power" class="togglebutton btn-group-sm">
+                            <div class="togglebutton btn-group-sm">
                                 <a href="javascript:void(0)" id="btn-power" class="btn btn-info btn-fab">
                                     <i class="material-icons">power_settings_new</i>
                                     <input id="btn-power-value" name="btn-power-value" type="checkbox" class="hidden" checked>
@@ -156,6 +156,11 @@
                             <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="seven_color_jumping">seven_color_jumping</a>
                             <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="rgb_jumping">rgb_jumping</a>
 
+                        </div>
+                        
+                        <div id="control-speed" class="col-xs-9 col-sm-6 col-md-4">
+                            <label>Speed: <span id="level-speed">0</span>%</label>
+                            <div id="slider-speed" class="slider slider-info shor" style=""></div>
                         </div>
 
                         <div id="debug" class="col-xs-12">
@@ -414,6 +419,7 @@
 
             //Slider init
             var brightnessSlider = document.getElementById('slider-brightness');
+            var speedSlider = document.getElementById('slider-speed');
 
             noUiSlider.create(brightnessSlider, {
                 animate: true,
@@ -422,6 +428,19 @@
                 step: 5,
                 connect: 'lower',
                 range: brightnessRange,
+                format: decimalFormat
+            });
+            
+            noUiSlider.create(speedSlider, {
+                animate: true,
+                animationDuration: 300,
+                start: 0,
+                step: 5,
+                connect: 'lower',
+                range: {
+                    'min': 0,
+                    'max': 100
+                },
                 format: decimalFormat
             });
 
@@ -550,27 +569,21 @@
 
                 }
             })
+            
+            $(".btn-pattern").on("click", function () {
+                pattern_name = $(this).attr("id")
+                console.log(pattern_name)
+                socket.emit('command', {
+                    'cmd': 'pattern',
+                    'value': {'speed':speedSlider.noUiSlider.get(),'pattern':pattern_name},
+                    'device': '192.168.1.50'
 
-            //             
-            //            $(".shor").noUiSlider({
-            //                start: 0,
-            //                connect: "lower",
-            //                tooltips: [true,  wNumb({ decimals: 1 }) ],
-            //                range: {
-            //                    min: 0,
-            //                    max: 100
-            //                }
-            //            });
-            //
-            //            $(".svert").noUiSlider({
-            //                orientation: "vertical",
-            //                start: 40,
-            //                connect: "lower",
-            //                range: {
-            //                    min: 0,
-            //                    max: 100
-            //                }
-            //            });
+                }, function (data) {
+                    console.log(data);
+                });
+            })
+
+
         });
 
         //UI function when device is On
@@ -695,6 +708,9 @@
             //Update UI
             if (data.power == "ON") {
                 turnOn($('#192_168_1_50').find("#btn-power-value"), $('#192_168_1_50').find("#slider-brightness")[0])
+                if (data.pattern_id != "color") {
+                    $('#192_168_1_50').find("#slider-brightness")[0].setAttribute("disabled", true)
+                }
             } else {
                 refresher.set_interval(60000);
                 turnOff($('#192_168_1_50').find("#btn-power-value"), $('#192_168_1_50').find("#slider-brightness")[0])

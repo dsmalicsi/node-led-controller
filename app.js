@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
         console.log('User disconnected', socket.handshake.address);
 
     });
-    
+
     socket.on('check-state', (data) => {
         clt = findClient(data.device);
         checkState(clt, null)
@@ -57,18 +57,18 @@ io.on('connection', (socket) => {
     })
 
     socket.on('hold', (command) => {
-        
+
         val = command.value;
         dev = command.device;
-        
+
         clt = findClient(dev);
         clt.hold = val;
-        
+
         if (!val) {
             sleep.usleep(70000)
             checkState(clt)
         }
-        
+
     })
 
     socket.on('command', (command) => {
@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
         dev = command.device;
         clt = findClient(dev);
 
-        //console.log(cmd, val, dev, socket.handshake.address);
+        console.log(cmd, val, dev, socket.handshake.address);
 
         switch (cmd) {
 
@@ -96,26 +96,36 @@ io.on('connection', (socket) => {
             break;
         case "brightness":
             //send brightness command here
-      
+
             r = val.r
             g = val.g
             b = val.b
 
             changeRgb(clt, r, g, b)
-            
-            console.log("Changed brightness",r,g,b,"%")
+
+            console.log("Changed brightness", r, g, b, "%")
             break;
         case "rgb":
             //send rgb command here
-           
-            var rgbarr =/([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})/g.exec(val)
+
+            var rgbarr = /([0-9]{1,3}),([0-9]{1,3}),([0-9]{1,3})/g.exec(val)
             r = rgbarr[1]
             g = rgbarr[2]
             b = rgbarr[3]
-            
+
             changeRgb(clt, r, g, b)
-            
+
             console.log("Changed RGB", r, g, b)
+            break;
+        case "pattern":
+
+            var speed = val.speed;
+            var pattern = val.pattern;
+                
+            changePattern(clt, speed, pattern)
+            
+            console.log("Changed Pattern", speed, pattern)
+
             break;
         default:
             console.log("Invalid command")
@@ -138,10 +148,10 @@ var clients = []
 //make loop of devices to store all client instances in array
 
 for (var i in devices) {
-    
+
     console.log(i)
     clients[i] = new net.Socket();
-    
+
     clients[i].setEncoding("hex");
     clients[i].setKeepAlive(true, 5000);
     clients[i].ip = devices[i]
@@ -153,10 +163,12 @@ for (var i in devices) {
 
     clients[i].on('connect', function (err) {
         console.log('Connected to ' + this.ip + '!');
-        
+
         checkState(this, null)
-        setInterval(() => {checkState(this, null)}, 30000)
-        
+        setInterval(() => {
+            checkState(this, null)
+        }, 30000)
+
     })
 
     clients[i].on('data', function (data) {
@@ -175,8 +187,7 @@ for (var i in devices) {
                     console.log("RX: Light State Changed, checking...")
                     sleep.usleep(70000)
                     checkState(this)
-                }
-                else {
+                } else {
                     //console.log("RX: Skip Check State")
                 }
 
@@ -220,37 +231,36 @@ for (var i in devices) {
             } else if (mode == "ww") {
                 mode_str = "Warm White: " + ww_level + "%"
             } else if (mode == "preset") {
-                mode_str = pattern_str 
+                mode_str = pattern_str
             } else if (mode == "custom") {
                 mode_str = "Custom pattern (Speed " + speed + "%)"
             } else {
-                mode_str = "Unknown mode 0x"+pattern ///
+                mode_str = "Unknown mode 0x" + pattern ///
             }
 
             if (pattern == 0x62) {
                 mode_str += " (tmp)"
                 clients[i].state_str = power_str + " [" + mode_str + "]"
             }
-               
-                io.emit('state',
-                       {    'device':this.ip,
-                            'power':power_str,
-                            'pattern_code':pattern.toString(16),
-                            'pattern_id':patterns.getPatternName(pattern).string_id,
-                            'pattern_name':pattern_str,
-                            'mode': mode,
-                            'mode_str': mode_str,
-                            'ww_level': ww_level,
-                            'delay': delay,
-                            'speed':speed,
-                            'r':red,
-                            'g':green,
-                            'b':blue,
-                            'ww':ww
-                       }
-                )
-                
-            console.log("POWER:", power_str, "PATTERN:", "0x"+pattern.toString(16), "WW_LEVEL:", ww_level)
+
+            io.emit('state', {
+                'device': this.ip,
+                'power': power_str,
+                'pattern_code': pattern.toString(16),
+                'pattern_id': patterns.getPatternName(pattern).string_id,
+                'pattern_name': pattern_str,
+                'mode': mode,
+                'mode_str': mode_str,
+                'ww_level': ww_level,
+                'delay': delay,
+                'speed': speed,
+                'r': red,
+                'g': green,
+                'b': blue,
+                'ww': ww
+            })
+
+            console.log("POWER:", power_str, "PATTERN:", "0x" + pattern.toString(16), "WW_LEVEL:", ww_level)
             console.log("MODE:", mode_str)
             console.log("RGB:", red, green, blue, "DELAY:", delay, "SPEED:", speed)
             console.log("=====================================")
@@ -283,10 +293,10 @@ function checkState(client, callback) {
     var msg = [0x81, 0x8a, 0x8b];
     send(client, msg, (data) => {
 
-       callback = data;
+        callback = data;
 
     })
-    
+
     return true;
 }
 
@@ -324,6 +334,23 @@ function changeRgb(client, r, g, b) {
     })
 }
 
+function changePattern(client, speed, pattern) {
+
+    pattern_code = patterns.getPatternCode(pattern)
+    if (patterns.validPresetPattern(pattern_code)) {
+        console.log(pattern_code)
+        delay = utils.calcDelay(parseInt(speed))
+        var msg = [0x61, pattern_code, delay, 0x0f]
+
+        send(client, msg, (data) => {
+            //console.log(data)
+        })
+    } else {
+        console.log("Invalid Pattern Code")
+    }
+
+}
+
 
 function read(response, pkt_length) {
     rx = []
@@ -338,7 +365,7 @@ function read(response, pkt_length) {
 function send(client, msg, callback) {
     var crc = sum(msg)
     msg.push(crc)
-    //console.log("TX:", msg, "0x" + crc.toString(16).replace(/^[0-9]/g, ''))
+        console.log("TX:", msg, "0x" + crc.toString(16).replace(/^[0-9]/g, ''))
     client.write(new Buffer(msg), (err, data) => {
 
         if (!err) {

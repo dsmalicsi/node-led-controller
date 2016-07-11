@@ -52,6 +52,11 @@ exports.getPatternName = (pattern) => {
             string_name: string_name
         }
     }
+}
 
-
+exports.getPatternCode = (pattern_name) => {
+    
+   code = _.findKey(patternNames,  _.partial(_.isEqual, pattern_name));
+    console.log(pattern_name, code)
+    return code
 }

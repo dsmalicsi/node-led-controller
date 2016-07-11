@@ -480,7 +480,7 @@
                         animate: true,
                         animationDuration: 300,
                         start: 5,
-                        step: 2,
+                        step: 5,
                         connect: 'lower',
                         range: brightnessRange,
                         format: decimalFormat
@@ -792,12 +792,14 @@
             $("#state-delay[data-device='"+device+"']").val(data.delay)
             $("#state-speed[data-device='"+device+"']").val(data.speed)
             
+            $(".slider[data-device='"+device+"']").css('background-color','rgb('+data.r+','+data.g+','+data.b+')')
+            
             //Change refresh interval depending on pattern
             if (data.pattern_id == "color") {
                 refresher.set_interval(5000);
                 console.log("color")
             } else if (data.power != "OFF"){
-                refresher.set_interval(300);
+                refresher.set_interval(150);
             }
 
             //Update UI

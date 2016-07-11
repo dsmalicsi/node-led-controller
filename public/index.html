@@ -346,7 +346,8 @@
             });
             
             //Init device values
-            setInterval(() => { if (!hold) socket.emit('check-state',{'device':'192.168.1.50'})},10000)
+            socket.emit('check-state',{'device':'192.168.1.50'})
+            setInterval(() => { if (!hold) socket.emit('check-state',{'device':'192.168.1.50'})},1000)
 
 
             //Slider init

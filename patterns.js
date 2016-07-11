@@ -24,24 +24,33 @@ var patternNames = {
     "53": "cyan_strobe_flash",
     "54": "purple_strobe_flash",
     "55": "white_strobe_flash",
-    "56": "seven_color_jumping"
+    "56": "seven_color_jumping",
+    "57": "rgb_jumping"
 }
 
 exports.validPresetPattern = (pattern) => {
-    if (pattern < 0x25 || pattern > 0x38)
+    if (pattern < 0x25 || pattern > 0x39)
         return false
     else
         return true
 }
 
 exports.getPatternName = (pattern) => {
-    
-    if (pattern < 0x25 || pattern > 0x38) {
-        return {string_id:"color", string_name:"color"}
+
+    if (pattern < 0x25 || pattern > 0x39) {
+        return {
+            string_id: "color",
+            string_name: "color"
+        }
     } else {
         string_id = patternNames[pattern]
-        string_name = patternNames[pattern].replace(/_/g, " ").toLowerCase().replace(/\b\w/g, function (txt) { return txt.toUpperCase(); })
-        return {string_id:string_id, string_name:string_name}
+        string_name = patternNames[pattern].replace(/_/g, " ").toLowerCase().replace(/\b\w/g, function (txt) {
+            return txt.toUpperCase();
+        })
+        return {
+            string_id: string_id,
+            string_name: string_name
+        }
     }
 
 

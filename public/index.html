@@ -441,7 +441,7 @@
                         animate: true,
                         animationDuration: 300,
                         start: 5,
-                        step: 5,
+                        step: 2,
                         connect: 'lower',
                         range: brightnessRange,
                         format: decimalFormat
@@ -756,7 +756,7 @@
                 refresher.set_interval(5000);
                 console.log("color")
             } else if (data.power != "OFF"){
-                refresher.set_interval(500);
+                refresher.set_interval(300);
             }
 
             //Update UI

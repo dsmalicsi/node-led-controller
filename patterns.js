@@ -35,10 +35,14 @@ exports.validPresetPattern = (pattern) => {
 }
 
 exports.getPatternName = (pattern) => {
+    
+    if (pattern < 0x25 || pattern > 0x38) {
+        return {string_id:"color", string_name:"color"}
+    } else {
+        string_id = patternNames[pattern]
+        string_name = patternNames[pattern].replace(/_/g, " ").toLowerCase().replace(/\b\w/g, function (txt) { return txt.toUpperCase(); })
+        return {string_id:string_id, string_name:string_name}
+    }
 
-    string_id = patternNames[pattern]
-    string_name = patternNames[pattern].replace(/_/g, " ").toLowerCase().replace(/\b\w/g, function (txt) { return txt.toUpperCase(); })
-
-    return {string_id:string_id, string_name:string_name}
 
 }

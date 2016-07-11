@@ -201,6 +201,7 @@ for (var i in devices) {
             }
 
             pattern = res[3]
+            pattern_str = patterns.getPatternName(pattern).string_name
             ww = res[9]
             ww_level = utils.byteToPercent(ww)
             mode = utils.checkMode(ww_level, pattern)
@@ -220,7 +221,6 @@ for (var i in devices) {
             } else if (mode == "ww") {
                 mode_str = "Warm White: " + ww_level + "%"
             } else if (mode == "preset") {
-                pattern_str = patterns.getPatternName(pattern).string_name
                 mode_str = pattern_str + " (Speed " + speed + "%)" + "Color: {" + "R:" + red + " G:" + green + " B:" + blue + "}"
             } else if (mode == "custom") {
                 mode_str = "Custom pattern (Speed " + speed + "%)"
@@ -236,7 +236,9 @@ for (var i in devices) {
                 io.emit('state',
                        {    'device':this.ip,
                             'power':power_str,
-                            'pattern':pattern.toString(16),
+                            'pattern_code':pattern.toString(16),
+                            'pattern_id':patterns.getPatternName(pattern).string_id,
+                            'pattern_name':pattern_str,
                             'mode': mode,
                             'mode_str': mode_str,
                             'ww_level': ww_level,

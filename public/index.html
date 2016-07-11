@@ -49,16 +49,27 @@
             background-color: #424242 !important;
         }
         
-        .btn-on {
+        a#btn-power.btn-on {
             background-color: #03a9f4 !important;
         }
         
-        .btn-off {
-            background-color: rgba(153, 153, 153, 0.2) !important;
+        a#btn-power.btn-off {
+            background-color: #303030 !important;
         }
         
-        h4 .material-icons {
+        .panel-heading {
+                        min-height: 60px;
+        }
+        
+        .device-info {
+            font-size:18px !important;
+            line-height: 40px;
+            float:left;
+        }
+        
+        .device-info .material-icons {
             font-size: 22px !important;
+            line-height: 40px;
             vertical-align: bottom;
         }
         
@@ -94,127 +105,146 @@
             </div>
         </div>
 
-        <div class="row device-container" id="192_168_1_50">
+        <div class="row device-container" data-device="192.168.1.50">
 
             <div class="col-md-12">
                 <div class="panel panel-default">
                     <div class="panel-heading">
-                        <h4>
-                            <i id="connect-ok" class="material-icons text-success">wifi</i> 
-                            <i id="connect-remote" class="material-icons text-success">wb_cloudy</i> 
-                            <i id="connect-warn" class="material-icons text-warning">perm_scan_wifi</i> 
-                            <i id="connect-off" class="material-icons text-muted">signal_wifi_off</i>  
-                            <b>DEVICE 1</b> (<span id="device-ip">192.168.1.50</span>:<span id="device-port">5577</span>)
-                        </h4>
-                    </div>
-                    <div class="panel-body">
-                        <div id="control-power" class="col-xs-3 col-sm-2 col-md-1">
-
-
-                            <label>Power</label>
-                            <div class="togglebutton btn-group-sm">
-                                <a href="javascript:void(0)" id="btn-power" class="btn btn-info btn-fab">
-                                    <i class="material-icons">power_settings_new</i>
-                                    <input id="btn-power-value" name="btn-power-value" type="checkbox" class="hidden" checked>
-
-                                </a>
-                            </div>
-
+                        <div class="device-info">
+                            <span>
+                                <i id="connect-ok" class="material-icons text-success">wifi</i> 
+                                <i id="connect-remote" class="material-icons text-success">wb_cloudy</i> 
+                                <i id="connect-warn" class="material-icons text-warning">perm_scan_wifi</i> 
+                                <i id="connect-off" class="material-icons text-muted">signal_wifi_off</i>  
+                                <b>DEVICE 1</b> (<span id="device-ip">192.168.1.50</span>:<span id="device-port">5577</span>)
+                            </span>
                         </div>
+                             
+                        <div class="btn-group-sm pull-right">
+                            <a href="javascript:void(0)" id="btn-power" class="btn btn-info btn-fab btn-off" data-device="192.168.1.50">
+                                <i class="material-icons">power_settings_new</i>
+                                <input id="btn-power-value" name="btn-power-value" type="checkbox" class="hidden" data-device="192.168.1.50" checked>
 
-                        <div id="control-brightness" class="col-xs-9 col-sm-6 col-md-4">
-                            <label>Brightness: <span id="level-brightness">5</span>%</label>
-                            <div id="slider-brightness" class="slider slider-info slider-brightness shor" style=""></div>
-                        </div>
-
-                        <div id="control-rgb" class="col-xs-12 col-sm-12 col-md-4">
-
-                            <input id="control-rgb-input" type="text" data-wheelcolorpicker="" data-wcp-mobile="true" data-wcp-mobileWidth="500" data-wcp-live="false" data-wcp-sliders="w" data-wcp-hideKeyboard="true" data-wcp-snap="true" data-wcp-layout="block">
-                        </div>
-
-                        <div id="control-modes" class="col-xs-12 col-sm-12 col-md-12">
-
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="seven_color_cross_fade">seven_color_cross_fade</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="red_gradual_change">red_gradual_change</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="green_gradual_change">green_gradual_change</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="blue_gradual_change">blue_gradual_change</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="yellow_gradual_change">yellow_gradual_change</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="cyan_gradual_change">cyan_gradual_change</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="purple_gradual_change">purple_gradual_change</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="white_gradual_change">white_gradual_change</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="red_green_cross_fade">red_green_cross_fade</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="red_blue_cross_fade">red_blue_cross_fade</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="green_blue_cross_fade">green_blue_cross_fade</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="seven_color_strobe_flash">seven_color_strobe_flash</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="red_strobe_flash">red_strobe_flash</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="green_strobe_flash">green_strobe_flash</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="blue_stobe_flash">blue_stobe_flash</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="yellow_strobe_flash">yellow_strobe_flash</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="cyan_strobe_flash">cyan_strobe_flash</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="purple_strobe_flash">purple_strobe_flash</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="white_strobe_flash">white_strobe_flash</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="seven_color_jumping">seven_color_jumping</a>
-                            <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" id="rgb_jumping">rgb_jumping</a>
-
+                            </a>
                         </div>
                         
-                        <div id="control-speed" class="col-xs-9 col-sm-6 col-md-4">
-                            <label>Speed: <span id="level-speed">0</span>%</label>
-                            <div id="slider-speed" class="slider slider-info slider-speed shor" style=""></div>
-                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            
+                            <div id="control-brightness" class="col-xs-12 col-sm-6">
+                                <label>Brightness: <span id="level-brightness" data-device="192.168.1.50">5</span>%</label>
+                                <div id="slider-brightness" class="slider slider-info slider-brightness shor" data-device="192.168.1.50" style=""></div>
+                            </div>
 
-                        <div id="debug" class="col-xs-12">
+                           
+                            <div id="control-speed" class="col-xs-12 col-sm-6">
+                                <label>Pattern Speed: <span id="level-speed" data-device="192.168.1.50">0</span>%</label>
+                                <div id="slider-speed" class="slider slider-info slider-speed shor" style="" data-device="192.168.1.50" ></div>
+                            </div>
+                        </div>
+                        
+                        
+                        
+                        <ul class="nav nav-tabs nav-justified">
+                          <li class="active"><a data-toggle="tab" href="#colors">Solid Color</a></li>
+                          <li><a data-toggle="tab" href="#patterns">Patterns</a></li>
+                          <li><a data-toggle="tab" href="#a">#</a></li>
+                        </ul>
+
+                        <div class="tab-content">
+                          <div id="colors" class="tab-pane fade in active">
+                            
+                             
+                            <div id="control-rgb" class="col-xs-12 col-sm-12 col-md-3">
+<!--                                <label>RGB </label><br/>-->
+                                <input id="control-rgb-input" type="text" data-wheelcolorpicker="" data-wcp-mobile="true" data-wcp-mobileWidth="500" data-wcp-live="false" data-wcp-sliders="w" data-wcp-hideKeyboard="true" data-wcp-snap="true" data-wcp-layout="block" data-device="192.168.1.50" >
+                            </div>
+
+                          </div>
+                          <div id="patterns" class="tab-pane fade">
+                            <h3>Patterns</h3>
+
+                            <div id="control-modes" class="col-xs-12 col-sm-12 col-md-12" data-device="192.168.1.50">
+
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="seven_color_cross_fade">seven_color_cross_fade</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="red_gradual_change">red_gradual_change</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="green_gradual_change">green_gradual_change</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="blue_gradual_change">blue_gradual_change</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="yellow_gradual_change">yellow_gradual_change</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="cyan_gradual_change">cyan_gradual_change</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="purple_gradual_change">purple_gradual_change</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="white_gradual_change">white_gradual_change</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="red_green_cross_fade">red_green_cross_fade</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="red_blue_cross_fade">red_blue_cross_fade</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="green_blue_cross_fade">green_blue_cross_fade</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="seven_color_strobe_flash">seven_color_strobe_flash</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="red_strobe_flash">red_strobe_flash</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="green_strobe_flash">green_strobe_flash</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="blue_stobe_flash">blue_stobe_flash</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="yellow_strobe_flash">yellow_strobe_flash</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="cyan_strobe_flash">cyan_strobe_flash</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="purple_strobe_flash">purple_strobe_flash</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="white_strobe_flash">white_strobe_flash</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="seven_color_jumping">seven_color_jumping</a>
+                                <a href="javascript:void(0)" class="btn btn-raised btn-default btn-pattern" data-device="192.168.1.50" id="rgb_jumping">rgb_jumping</a>
+
+                            </div>
+                          </div>
+                          <div id="a" class="tab-pane fade">
+                            <h3>#</h3>
+                            <div id="debug" class="col-xs-12">
 
 
                             <form class="form-inline">
 
                                 <div class="form-group">
                                     <label class="control-label" for="state-power">Power</label>
-                                    <input type="text" class="form-control" id="state-power" size="8" />
+                                    <input type="text" class="form-control" id="state-power" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-red">R</label>
-                                    <input type="text" class="form-control" id="state-red" size="8" />
+                                    <input type="text" class="form-control" id="state-red" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-green">G</label>
-                                    <input type="text" class="form-control" id="state-green" size="8" />
+                                    <input type="text" class="form-control" id="state-green" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-blue">B</label>
-                                    <input type="text" class="form-control" id="state-blue" size="8" />
+                                    <input type="text" class="form-control" id="state-blue" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-bright">Brightness</label>
-                                    <input type="text" class="form-control" id="state-bright" size="8" />
+                                    <input type="text" class="form-control" id="state-bright" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-color">Color</label>
-                                    <input type="text" class="form-control" id="state-color" size="8" />
+                                    <input type="text" class="form-control" id="state-color" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-ww">WW</label>
-                                    <input type="text" class="form-control" id="state-ww" size="8" />
+                                    <input type="text" class="form-control" id="state-ww" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-ww_level">WW %</label>
-                                    <input type="text" class="form-control" id="state-ww_level" size="8" />
+                                    <input type="text" class="form-control" id="state-ww_level" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-mode">Mode</label>
-                                    <input type="text" class="form-control" id="state-mode" size="8" />
+                                    <input type="text" class="form-control" id="state-mode" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-pattern">Pattern</label>
-                                    <input type="text" class="form-control" id="state-pattern" size="8" />
+                                    <input type="text" class="form-control" id="state-pattern" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-delay">Delay</label>
-                                    <input type="text" class="form-control" id="state-delay" size="8" />
+                                    <input type="text" class="form-control" id="state-delay" size="8" data-device="192.168.1.50" />
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label" for="state-speed">Speed</label>
-                                    <input type="text" class="form-control" id="state-speed" size="8" />
+                                    <input type="text" class="form-control" id="state-speed" size="8" data-device="192.168.1.50" />
                                 </div>
 
 
@@ -223,6 +253,15 @@
 
                         </div>
 
+                          </div>
+                        </div>
+                        
+                        
+                      
+                        
+                        
+
+                        
                     </div>
                 </div>
 
@@ -598,7 +637,7 @@
                 if ($(this).find("#btn-power-value").is(":checked")) {
                     console.log("Is On, will turn off")
 
-                    turnOff(this, brightnessSlider)
+                    turnOff($(this).data("device"))
 
                     socket.emit('command', {
                         'cmd': 'power',
@@ -611,7 +650,7 @@
 
                 } else {
                     console.log("Is off, will turn on")
-                    turnOn(this, brightnessSlider)
+                    turnOn($(this).data("device"))
                     socket.emit('command', {
                         'cmd': 'power',
                         'value': 'on',
@@ -641,39 +680,39 @@
         });
 
         //UI function when device is On
-        function turnOn(target, brightnessSlider) {
-            $(target).trigger("focusout")
-            $(target).find("#btn-power-value").prop('checked', true);
-            $(target).removeClass("btn-off")
-            $(target).addClass("btn-on")
+        function turnOn(device) {
+            
+            btnPower = $("#btn-power[data-device='"+device+"']")
+            brightnessSlider = $("#slider-brightness[data-device='"+device+"']")[0]
 
-
-            parent = $(target).parentsUntil("device-container")
-            console.log($(parent).find("#state-bright").val())
-
+            $("#btn-power-value[data-device='"+device+"']").prop('checked', true);
+            btnPower.trigger("focusout")
+            btnPower.removeClass("btn-off")
+            btnPower.addClass("btn-on")
+             
             //Enable brightness dimmer and other controls.
             brightnessSlider.removeAttribute('disabled');
-            brightnessSlider.noUiSlider.set($(parent).find("#state-bright").val());
-            $(parent).find(".btn-pattern").removeClass("disabled")
+            brightnessSlider.noUiSlider.set($("#state-bright[data-device='"+device+"']").val());
+            $(".btn-pattern[data-device='"+device+"']").removeClass("disabled")
 
 
         }
 
 
         //UI function when device is Off
-        function turnOff(target, brightnessSlider) {
-            $(target).trigger("focusout")
-            $(target).find("#btn-power-value").prop('checked', false);
-            $(target).removeClass("btn-on")
-            $(target).addClass("btn-off")
+        function turnOff(device) {
+            btnPower = $("#btn-power[data-device='"+device+"']")
+            brightnessSlider = $("#slider-brightness[data-device='"+device+"']")[0]
             
-            parent = $(target).parentsUntil("device-container")
-        
-
+            $("#btn-power-value[data-device='"+device+"']").prop('checked', false);
+            btnPower.trigger("focusout")
+            btnPower.removeClass("btn-on")
+            btnPower.addClass("btn-off")
+            
             //Disable brightness dimmer and other controls.
             brightnessSlider.setAttribute('disabled', true);
             brightnessSlider.noUiSlider.set(0)
-            $(parent).find(".btn-pattern").addClass("disabled")
+            $(".btn-pattern[data-device='"+device+"']").addClass("disabled")
 
 
         }
@@ -734,22 +773,24 @@
 
 
         socket.on('state', (data) => {
-            console.log(data);
-            $("#192_168_1_50").find("#state-power").val(data.power)
-            $("#192_168_1_50").find("#state-red").val(data.r)
-            $("#192_168_1_50").find("#state-green").val(data.g)
-            $("#192_168_1_50").find("#state-blue").val(data.b)
-            $("#192_168_1_50").find("#state-bright").val(getBrightness(data.r, data.g, data.b))
-            $("#192_168_1_50").find("#level-brightness").html(getBrightness(data.r, data.g, data.b))
-            $("#192_168_1_50").find("#state-color").val("#" + data.r.toString(16) + data.g.toString(16) + data.b.toString(16))
-            $("#192_168_1_50").find("#state-ww").val(data.ww)
-            $("#192_168_1_50").find("#state-ww_level").val(data.ww_level)
-            $("#192_168_1_50").find("#state-mode").val(data.mode)
-            $("#192_168_1_50").find("#state-pattern").val(data.pattern_id)
-            $("#192_168_1_50").find(".btn-pattern").removeClass("btn-info")
-            $("#192_168_1_50").find(".btn-pattern#" + data.pattern_id).addClass("btn-info")
-            $("#192_168_1_50").find("#state-delay").val(data.delay)
-            $("#192_168_1_50").find("#state-speed").val(data.speed)
+            var device = '192.168.1.50'
+                console.log($("#level-brightness[data-device='"+device+"']"));
+
+            $("#state-power[data-device='"+device+"']").val(data.power)
+            $("#state-red[data-device='"+device+"']").val(data.r)
+            $("#state-green[data-device='"+device+"']").val(data.g)
+            $("#state-blue[data-device='"+device+"']").val(data.b)
+            $("#state-bright[data-device='"+device+"']").val(getBrightness(data.r, data.g, data.b))
+            $("#level-brightness[data-device='"+device+"']").html(getBrightness(data.r, data.g, data.b))
+            $("#state-color[data-device='"+device+"']").val("#" + data.r.toString(16) + data.g.toString(16) + data.b.toString(16))
+            $("#state-ww[data-device='"+device+"']").val(data.ww)
+            $("#state-ww_level[data-device='"+device+"']").val(data.ww_level)
+            $("#state-mode[data-device='"+device+"']").val(data.mode)
+            $("#state-pattern[data-device='"+device+"']").val(data.pattern_id)
+            $(".btn-pattern[data-device='"+device+"']").removeClass("btn-info")
+            $(".btn-pattern[data-device='"+device+"']#" + data.pattern_id).addClass("btn-info")
+            $("#state-delay[data-device='"+device+"']").val(data.delay)
+            $("#state-speed[data-device='"+device+"']").val(data.speed)
             
             //Change refresh interval depending on pattern
             if (data.pattern_id == "color") {
@@ -761,13 +802,18 @@
 
             //Update UI
             if (data.power == "ON") {
-                turnOn($('#192_168_1_50').find("#btn-power-value"), $('#192_168_1_50').find("#slider-brightness")[0])
+                turnOn(device)
                 if (data.pattern_id != "color") {
-                    $('#192_168_1_50').find("#slider-brightness")[0].setAttribute("disabled", true)
+                    $("#slider-brightness[data-device='"+device+"']")[0].setAttribute("disabled", true)
+                    $("#slider-speed[data-device='"+device+"']")[0].removeAttribute("disabled")
+                } else if (data.pattern_id == "color") {
+                    $("#slider-speed[data-device='"+device+"']")[0].setAttribute("disabled", true)
+                    $("#slider-brightness[data-device='"+device+"']")[0].removeAttribute("disabled")
+
                 }
             } else {
                 refresher.set_interval(60000);
-                turnOff($('#192_168_1_50').find("#btn-power-value"), $('#192_168_1_50').find("#slider-brightness")[0])
+                turnOff(device)
             }
         })
     </script>

@@ -452,9 +452,6 @@
 
                 rgb = calcRgbBrightness(value, $("#control-rgb-input").wheelColorPicker('getValue', 'rgb'));
 
-                console.log(value, rgb)
-                    //                console.log(calcBrightness(value, $("#state-red").val()),calcBrightness(value, $("#state-green").val()),calcBrightness(value, $("#state-blue").val()))
-                    //                console.log(r,g,b)
                     //Send socket here
                 socket.emit('command', {
                     'cmd': 'brightness',
@@ -468,26 +465,54 @@
 
             //Prevent the client from auto-refreshing state 
             //while sliding to reduce spam
-            brightnessSlider.noUiSlider.on('start', function () {
-                hold = true;
-                socket.emit('hold', {
-                    'value': true,
+            var sliders = $(".slider")
+          
+            for(var i in sliders) {
+                
+                //has Uncaught TypeError. Not sure why yet.
+                sliders[i].noUiSlider.on('start', function () {
+                    console.log("holding")
+                    hold = true;
+                    socket.emit('hold', {
+                        'value': true,
+                        'device': '192.168.1.50'
+                    }, function (data) {
+                        console.log(data);
+                    });
+                });
+
+                //Resume the client auto-refreshing state after sliding
+                sliders[i].noUiSlider.on('end', function () {
+                    hold = false;
+                    socket.emit('hold', {
+                        'value': false,
+                        'device': '192.168.1.50'
+                    }, function (data) {
+                        console.log(data);
+                    });
+                });
+                
+            }
+            
+
+            //Speed slider event. TODO: Make dynamic also
+            speedSlider.noUiSlider.on('slide', function () {
+                value = speedSlider.noUiSlider.get();
+                $("#state-speed").val(value);
+                $("#level-speed").html(value);
+
+                pattern_name = $(".btn-pattern.btn-info").attr("id")
+                console.log(pattern_name)
+                socket.emit('command', {
+                    'cmd': 'pattern',
+                    'value': {'speed':speedSlider.noUiSlider.get(),'pattern':pattern_name},
                     'device': '192.168.1.50'
+
                 }, function (data) {
                     console.log(data);
                 });
             });
 
-            //Resume the client auto-refreshing state after sliding
-            brightnessSlider.noUiSlider.on('end', function () {
-                hold = false;
-                socket.emit('hold', {
-                    'value': false,
-                    'device': '192.168.1.50'
-                }, function (data) {
-                    console.log(data);
-                });
-            });
 
             $('#control-rgb-input').on('sliderup', throttle(function () {
                 hold = false;

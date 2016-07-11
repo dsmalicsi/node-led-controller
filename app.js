@@ -78,7 +78,7 @@ io.on('connection', (socket) => {
         dev = command.device;
         clt = findClient(dev);
 
-        console.log(cmd, val, dev, socket.handshake.address);
+//        console.log(cmd, val, dev, socket.handshake.address);
 
         switch (cmd) {
 
@@ -92,7 +92,7 @@ io.on('connection', (socket) => {
                     console.log(data)
                 })
             }
-            console.log("Changed Power")
+            console.log("Changed Power", val, dev, socket.handshake.address)
             break;
         case "brightness":
             //send brightness command here
@@ -103,7 +103,7 @@ io.on('connection', (socket) => {
 
             changeRgb(clt, r, g, b)
 
-            console.log("Changed brightness", r, g, b, "%")
+            console.log("Changed brightness", r, g, b, "%", dev, socket.handshake.address)
             break;
         case "rgb":
             //send rgb command here
@@ -115,7 +115,7 @@ io.on('connection', (socket) => {
 
             changeRgb(clt, r, g, b)
 
-            console.log("Changed RGB", r, g, b)
+            console.log("Changed RGB", r, g, b, dev, socket.handshake.address)
             break;
         case "pattern":
 
@@ -124,7 +124,7 @@ io.on('connection', (socket) => {
                 
             changePattern(clt, speed, pattern)
             
-            console.log("Changed Pattern", speed, pattern)
+            console.log("Changed Pattern", speed, pattern, dev, socket.handshake.address)
 
             break;
         default:
@@ -149,7 +149,7 @@ var clients = []
 
 for (var i in devices) {
 
-    console.log(i)
+//    console.log(i)
     clients[i] = new net.Socket();
 
     clients[i].setEncoding("hex");
@@ -197,7 +197,6 @@ for (var i in devices) {
 
             break;
         case 14: //Check State
-            console.log("== OP: Check State ==================")
 
             power_state = res[2]
             power_str = "Unknown power state"
@@ -259,11 +258,16 @@ for (var i in devices) {
                 'b': blue,
                 'ww': ww
             })
+            
+            if (pattern > 57) {
+                console.log("== OP: Check State ==================")
+                console.log("POWER:", power_str, "PATTERN:", "0x" + pattern.toString(16), "WW_LEVEL:", ww_level)
+                console.log("MODE:", mode_str)
+                console.log("RGB:", red, green, blue, "DELAY:", delay, "SPEED:", speed)
+                console.log("=====================================")
+            }
 
-            console.log("POWER:", power_str, "PATTERN:", "0x" + pattern.toString(16), "WW_LEVEL:", ww_level)
-            console.log("MODE:", mode_str)
-            console.log("RGB:", red, green, blue, "DELAY:", delay, "SPEED:", speed)
-            console.log("=====================================")
+           
             break;
         default:
             console.log(res)
@@ -338,7 +342,6 @@ function changePattern(client, speed, pattern) {
 
     pattern_code = patterns.getPatternCode(pattern)
     if (patterns.validPresetPattern(pattern_code)) {
-        console.log(pattern_code)
         delay = utils.calcDelay(parseInt(speed))
         var msg = [0x61, pattern_code, delay, 0x0f]
 
@@ -365,7 +368,7 @@ function read(response, pkt_length) {
 function send(client, msg, callback) {
     var crc = sum(msg)
     msg.push(crc)
-        console.log("TX:", msg, "0x" + crc.toString(16).replace(/^[0-9]/g, ''))
+//        console.log("TX:", msg, "0x" + crc.toString(16).replace(/^[0-9]/g, ''))
     client.write(new Buffer(msg), (err, data) => {
 
         if (!err) {

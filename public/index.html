@@ -124,7 +124,7 @@
 
                         <div id="control-brightness" class="col-xs-9 col-sm-6 col-md-4">
                             <label>Brightness: <span id="level-brightness">5</span>%</label>
-                            <div id="slider-brightness" class="slider slider-info shor" style=""></div>
+                            <div id="slider-brightness" class="slider slider-info slider-brightness shor" style=""></div>
                         </div>
 
                         <div id="control-rgb" class="col-xs-12 col-sm-12 col-md-4">
@@ -160,7 +160,7 @@
                         
                         <div id="control-speed" class="col-xs-9 col-sm-6 col-md-4">
                             <label>Speed: <span id="level-speed">0</span>%</label>
-                            <div id="slider-speed" class="slider slider-info shor" style=""></div>
+                            <div id="slider-speed" class="slider slider-info slider-speed shor" style=""></div>
                         </div>
 
                         <div id="debug" class="col-xs-12">
@@ -418,56 +418,102 @@
 
 
             //Slider init
-            var brightnessSlider = document.getElementById('slider-brightness');
-            var speedSlider = document.getElementById('slider-speed');
-
-            noUiSlider.create(brightnessSlider, {
-                animate: true,
-                animationDuration: 300,
-                start: 5,
-                step: 5,
-                connect: 'lower',
-                range: brightnessRange,
-                format: decimalFormat
-            });
+             
+            var brightnessSliders = $(".slider-brightness");
+            var speedSliders = $(".slider-speed");
             
-            noUiSlider.create(speedSlider, {
-                animate: true,
-                animationDuration: 300,
-                start: 0,
-                step: 5,
-                connect: 'lower',
-                range: {
-                    'min': 0,
-                    'max': 100
-                },
-                format: decimalFormat
-            });
+            
+            
+            console.log(brightnessSliders)
+            console.log(brightnessSliders.length)
+//            console.log($(".slider-brightness"))
+//            console.log($(".slider-brightness")[0])
+//            console.log($(".slider-brightness")[1])
+            
+             for (var i = 0; i < brightnessSliders.length; i++) { 
+                
+                brightnessSlider = brightnessSliders[i]
+                
+                console.log("i",i)
+                
+                if(!brightnessSlider.noUiSlider){
+                     noUiSlider.create(brightnessSlider, {
+                        animate: true,
+                        animationDuration: 300,
+                        start: 5,
+                        step: 5,
+                        connect: 'lower',
+                        range: brightnessRange,
+                        format: decimalFormat
+                    });
 
-            //Dimmer brightness event. TODO: Make dynamic also
-            brightnessSlider.noUiSlider.on('slide', function () {
-                value = brightnessSlider.noUiSlider.get();
-                $("#state-bright").val(value);
-                $("#level-brightness").html(value);
+                }
+                
+                 
+                //Dimmer brightness event. TODO: Make dynamic also
+                brightnessSlider.noUiSlider.on('slide', function () {
+                    value = brightnessSlider.noUiSlider.get();
+                    $("#state-bright").val(value);
+                    $("#level-brightness").html(value);
 
-                rgb = calcRgbBrightness(value, $("#control-rgb-input").wheelColorPicker('getValue', 'rgb'));
+                    rgb = calcRgbBrightness(value, $("#control-rgb-input").wheelColorPicker('getValue', 'rgb'));
 
-                    //Send socket here
-                socket.emit('command', {
-                    'cmd': 'brightness',
-                    'value': rgb,
-                    'device': '192.168.1.50'
+                        //Send socket here
+                    socket.emit('command', {
+                        'cmd': 'brightness',
+                        'value': rgb,
+                        'device': '192.168.1.50'
 
-                }, function (data) {
-                    console.log(data);
+                    }, function (data) {
+                        console.log(data);
+                    });
                 });
-            });
 
+                
+            }
+            
+            for (var i = 0; i < speedSliders.length; i++) {
+                
+                speedSlider = speedSliders.get(i)
+                
+                noUiSlider.create(speedSlider, {
+                    animate: true,
+                    animationDuration: 300,
+                    start: 0,
+                    step: 5,
+                    connect: 'lower',
+                    range: {
+                        'min': 0,
+                        'max': 100
+                    },
+                    format: decimalFormat
+                });
+
+                //Speed slider event. TODO: Make dynamic also
+                speedSlider.noUiSlider.on('slide', function () {
+                    value = speedSlider.noUiSlider.get();
+                    $("#state-speed").val(value);
+                    $("#level-speed").html(value);
+
+                    pattern_name = $(".btn-pattern.btn-info").attr("id")
+                    console.log(pattern_name)
+                    socket.emit('command', {
+                        'cmd': 'pattern',
+                        'value': {'speed':speedSlider.noUiSlider.get(),'pattern':pattern_name},
+                        'device': '192.168.1.50'
+
+                    }, function (data) {
+                        console.log(data);
+                    });
+                });
+                
+            }
+           
             //Prevent the client from auto-refreshing state 
             //while sliding to reduce spam
             var sliders = $(".slider")
           
-            for(var i in sliders) {
+            for(var i = 0; i < sliders.length; i++) {
                 
                 //has Uncaught TypeError. Not sure why yet.
                 sliders[i].noUiSlider.on('start', function () {
@@ -493,25 +539,8 @@
                 });
                 
             }
-            
-
-            //Speed slider event. TODO: Make dynamic also
-            speedSlider.noUiSlider.on('slide', function () {
-                value = speedSlider.noUiSlider.get();
-                $("#state-speed").val(value);
-                $("#level-speed").html(value);
-
-                pattern_name = $(".btn-pattern.btn-info").attr("id")
-                console.log(pattern_name)
-                socket.emit('command', {
-                    'cmd': 'pattern',
-                    'value': {'speed':speedSlider.noUiSlider.get(),'pattern':pattern_name},
-                    'device': '192.168.1.50'
-
-                }, function (data) {
-                    console.log(data);
-                });
-            });
+          
+           
 
 
             $('#control-rgb-input').on('sliderup', throttle(function () {
